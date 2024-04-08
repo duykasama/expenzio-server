@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenzio.Api", "Expenzio.Api\Expenzio.Api.csproj", "{F05E7869-05F7-4465-8018-049A23267F4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenzio.Domain", "Expenzio.Domain\Expenzio.Domain.csproj", "{BBBE93A7-E3D0-4312-B2B4-552DDBAA2DC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F05E7869-05F7-4465-8018-049A23267F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F05E7869-05F7-4465-8018-049A23267F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F05E7869-05F7-4465-8018-049A23267F4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBBE93A7-E3D0-4312-B2B4-552DDBAA2DC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBBE93A7-E3D0-4312-B2B4-552DDBAA2DC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBBE93A7-E3D0-4312-B2B4-552DDBAA2DC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBBE93A7-E3D0-4312-B2B4-552DDBAA2DC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
