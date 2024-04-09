@@ -10,6 +10,7 @@
     <PackageReference Include="dbup" Version="5.0.40" />
     <PackageReference Include="dbup-postgresql" Version="5.0.40" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
   </ItemGroup>
 
 </Project>

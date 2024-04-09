@@ -1,3 +1,5 @@
+using AutoMapper;
+using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
 
@@ -20,6 +22,11 @@ public static class ServiceCollectionExtensions {
             if (implementationType is null) continue;
             services.AddScoped(registerableType, implementationType);
         }
+
+        var config = new MapperConfiguration(AutoMapperConfigurer.Configure);
+        var mapper = config.CreateMapper();
+        services.AddSingleton(mapper);
+
         return services;
     }
 
