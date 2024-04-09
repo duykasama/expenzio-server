@@ -6,7 +6,7 @@ namespace Expenzio.DAL.Implementations;
 
 public class ExpenseRepository : GenericRepository<Expense>, IExpenseRepository
 {
-		public ExpenseRepository(ExpenzioDbContext context) : base(context)
-		{
-		}
+    public ExpenseRepository(ExpenzioDbContext context) : base(context)
+    {
+    }
 }

@@ -15,8 +15,8 @@ builder.Services.ConfigureServices();
 
 // Configure GraphQL
 builder.Services
-		.AddGraphQLServer()
-		.AddQueryType<ExpensesQuery>();
+    .AddGraphQLServer()
+    .AddQueryType<ExpensesQuery>();
 
 // Configure Rest API
 builder.Services.AddControllers();

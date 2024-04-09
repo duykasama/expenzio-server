@@ -4,5 +4,5 @@ namespace Expenzio.Domain.Interfaces;
 
 public interface IDatabaseModelMapper
 {
-		void MapToDatabaseModel(ModelBuilder builder);
+    void MapToDatabaseModel(ModelBuilder builder);
 }
