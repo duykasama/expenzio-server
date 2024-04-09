@@ -1,6 +1,6 @@
 using Expenzio.Controllers.GraphQLApi;
 using Expenzio.Common.Helpers;
-using Expenzio.Api;
+using Expenzio.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 DataAccessHelper.SetConfiguration(builder.Configuration);
