@@ -20,9 +20,10 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         throw new NotImplementedException();
     }
 
-    public Task AddAsync(T entity)
+    public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        await _dbSet.AddAsync(entity);
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
     public void AddMany(IEnumerable<T> entities)

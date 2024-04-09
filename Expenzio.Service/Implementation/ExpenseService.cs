@@ -13,17 +13,18 @@ public class ExpenseService : IExpenseService
         _expenseRepository = expenseRepository;
     }
 
-    public Task<Expense> AddExpenseAsync(Expense expense)
+    public async Task<Expense> AddExpenseAsync(Expense expense, CancellationToken cancellationToken = default)
+    {
+        await _expenseRepository.AddAsync(expense, cancellationToken);
+        return expense;
+    }
+
+    public Task DeleteExpenseAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
-    public Task DeleteExpenseAsync(int id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<Expense> GetExpenseAsync(int id)
+    public Task<Expense> GetExpenseAsync(Guid id)
     {
         throw new NotImplementedException();
     }

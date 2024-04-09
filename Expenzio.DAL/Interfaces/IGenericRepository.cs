@@ -2,9 +2,10 @@ using System.Linq.Expressions;
 
 namespace Expenzio.DAL.Interfaces;
 
-public interface IGenericRepository<T> where T : class {
+public interface IGenericRepository<T> where T : class 
+{
     void Add(T entity);
-    Task AddAsync(T entity);
+    Task AddAsync(T entity, CancellationToken cancellationToken = default);
     void AddMany(IEnumerable<T> entities);
     Task AddManyAsync(IEnumerable<T> entities);
     
