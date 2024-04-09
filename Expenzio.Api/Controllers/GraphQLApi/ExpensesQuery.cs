@@ -5,7 +5,7 @@ namespace Expenzio.Controllers.GraphQLApi;
 
 public class ExpensesQuery {
 		public Expense GetExpense() {
-				return new Expense {
+				return new() {
 						Id = Guid.NewGuid(),
 						Description = "Expense description",
 						Amount = 100,

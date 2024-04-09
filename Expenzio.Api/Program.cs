@@ -1,10 +1,6 @@
 using Expenzio.Controllers.GraphQLApi;
-using Expenzio.DAL.Implementations;
-using Expenzio.DAL.Interfaces;
-using Expenzio.Service;
-using Expenzio.Service.Interfaces;
 using Expenzio.Common.Helpers;
-using Expenzio.DAL.Data;
+using Expenzio.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 DataAccessHelper.SetConfiguration(builder.Configuration);
@@ -15,9 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Configure DI
-builder.Services.AddScoped<ExpenzioDbContext>();
-builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
-builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.ConfigureServices();
 
 // Configure GraphQL
 builder.Services
