@@ -1,6 +1,6 @@
 namespace Expenzio.Domain.Entities;
 
-public class Category {
+public class ExpenseCategory {
 		public Guid Id { get; set; }
 		public string Name { get; set; } = null!;
 		public string? Description { get; set; }

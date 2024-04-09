@@ -18,6 +18,7 @@ public class ExpensesQuery {
 		}
 
 		public async Task<IEnumerable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {
-				return await _expenseService.GetExpensesAsync();
+				var result = await _expenseService.GetExpensesAsync(); 
+				return result;
 		}
 }
