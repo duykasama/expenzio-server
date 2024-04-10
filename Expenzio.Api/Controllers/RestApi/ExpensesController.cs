@@ -1,4 +1,4 @@
-using Expenzio.Domain.Entities;
+using Expenzio.Domain.Models.Requests.Expense;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +15,9 @@ public class ExpensesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddExpense([FromBody] Expense expense, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> AddExpense([FromBody] CreateExpenseRequest request, CancellationToken cancellationToken = default)
     {
-        var result = await _expenseService.AddExpenseAsync(expense, cancellationToken);
+        var result = await _expenseService.AddExpenseAsync(request, cancellationToken);
         return Ok(result);
     }
 }

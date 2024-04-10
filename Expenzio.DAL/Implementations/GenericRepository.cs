@@ -88,7 +88,6 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
 
     public Task<IQueryable<T>> GetAllAsync()
     {
-        Console.WriteLine(_dbSet.AsQueryable());
         return Task.FromResult(_dbSet.AsQueryable().AsNoTracking());
     }
 

@@ -1,5 +1,7 @@
+using AutoMapper;
 using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
+using Expenzio.Domain.Models.Requests.Expense;
 using Expenzio.Service.Interfaces;
 
 namespace Expenzio.Service;
@@ -7,14 +9,17 @@ namespace Expenzio.Service;
 public class ExpenseService : IExpenseService
 {
     private readonly IExpenseRepository _expenseRepository;
+    private readonly IMapper _mapper;
 
-    public ExpenseService(IExpenseRepository expenseRepository)
+    public ExpenseService(IExpenseRepository expenseRepository, IMapper mapper)
     {
         _expenseRepository = expenseRepository;
+        _mapper = mapper;
     }
 
-    public async Task<Expense> AddExpenseAsync(Expense expense, CancellationToken cancellationToken = default)
+    public async Task<Expense> AddExpenseAsync(CreateExpenseRequest request, CancellationToken cancellationToken = default)
     {
+        var expense = _mapper.Map<Expense>(request);
         await _expenseRepository.AddAsync(expense, cancellationToken);
         return expense;
     }

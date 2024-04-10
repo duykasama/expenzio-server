@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions {
             services.AddScoped(registerableType, implementationType);
         }
 
-        var config = new MapperConfiguration(AutoMapperConfigurer.Configure);
+        var config = new MapperConfiguration(AutoMapperConfigurationHelper.Configure);
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
 
