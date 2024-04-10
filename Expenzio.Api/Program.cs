@@ -10,8 +10,8 @@ DataAccessHelper.SetConfiguration(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configure DI
 builder.Services.ConfigureServices();
+builder.Services.ConfigureCors(builder.Configuration);
 
 // Configure GraphQL
 builder.Services
@@ -30,6 +30,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("ExpenzioWebClient");
 app.UseHttpsRedirection();
 
 app.MapControllers();

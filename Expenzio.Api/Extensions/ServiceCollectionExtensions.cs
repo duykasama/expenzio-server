@@ -1,4 +1,5 @@
 using AutoMapper;
+using Expenzio.Api.Settings;
 using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
@@ -27,6 +28,23 @@ public static class ServiceCollectionExtensions {
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
 
+        return services;
+    }
+
+    public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration) {
+        var corsSettings = configuration.GetSection(nameof(CorsSettings)).Get<CorsSettings>() ?? throw new ArgumentNullException(nameof(CorsSettings));
+        services.AddCors(options => {
+            foreach (var policy in corsSettings.Policies) {
+                options.AddPolicy(policy.Name, builder => {
+                    builder.WithOrigins(policy.AllowedOrigins)
+                        .WithMethods(policy.AllowedMethods)
+                        .WithHeaders(policy.AllowedHeaders);
+                    if (policy.AllowCredentials) {
+                        builder.AllowCredentials();
+                    }
+                });
+            }
+        });
         return services;
     }
 
