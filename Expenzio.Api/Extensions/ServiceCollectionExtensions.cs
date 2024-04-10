@@ -39,9 +39,8 @@ public static class ServiceCollectionExtensions {
                     builder.WithOrigins(policy.AllowedOrigins)
                         .WithMethods(policy.AllowedMethods)
                         .WithHeaders(policy.AllowedHeaders);
-                    if (policy.AllowCredentials) {
+                    if (policy.AllowCredentials)
                         builder.AllowCredentials();
-                    }
                 });
             }
         });

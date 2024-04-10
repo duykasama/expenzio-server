@@ -3,6 +3,7 @@ using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
 using Expenzio.Domain.Models.Requests.Expense;
 using Expenzio.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expenzio.Service;
 
@@ -36,7 +37,8 @@ public class ExpenseService : IExpenseService
 
     public async Task<IEnumerable<Expense>> GetExpensesAsync()
     {
-        return await _expenseRepository.GetAllAsync();
+        return (await _expenseRepository.GetAllAsync())
+            .Include(e => e.Category);
     }
 
     public Task<Expense> UpdateExpenseAsync(Expense expense)
