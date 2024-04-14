@@ -1,4 +1,3 @@
-using Expenzio.Controllers.GraphQLApi;
 using Expenzio.Common.Helpers;
 using Expenzio.Api.Extensions;
 
@@ -12,13 +11,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureServices();
 builder.Services.ConfigureCors(builder.Configuration);
-
-// Configure GraphQL
-builder.Services
-    .AddGraphQLServer()
-    .AddQueryType<ExpensesQuery>();
-
-// Configure Rest API
+builder.Services.ConfigureGraphQL();
 builder.Services.AddControllers();
 
 var app = builder.Build();

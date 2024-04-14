@@ -1,4 +1,5 @@
 using AutoMapper;
+using Expenzio.Api.Controllers.GraphQLApi;
 using Expenzio.Api.Settings;
 using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
@@ -44,6 +45,23 @@ public static class ServiceCollectionExtensions {
                 });
             }
         });
+        return services;
+    }
+
+    public static IServiceCollection ConfigureGraphQL(this IServiceCollection services) {
+        var graphQl = services.AddGraphQLServer()
+            .AddQueryType<BaseQuery>();
+            // .AddTypeExtension<ExpenseQuery>()
+            // .AddTypeExtension<ExpenseCategoryQuery>();
+        var assemblyTypes = AppDomain
+            .CurrentDomain
+            .GetAssemblies()
+            .SelectMany(t => t.GetTypes())
+            .ToList();
+        foreach (var type in assemblyTypes) {
+            if (Attribute.IsDefined(type, typeof(ExtendObjectTypeAttribute)))
+                graphQl.AddTypeExtension(type);
+        }
         return services;
     }
 

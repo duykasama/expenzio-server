@@ -1,10 +1,12 @@
 using Expenzio.Domain.Entities;
 using Expenzio.Service.Interfaces;
 
-namespace Expenzio.Controllers.GraphQLApi;
+namespace Expenzio.Api.Controllers.GraphQLApi;
 
-public class ExpensesQuery {
-    public Expense GetExpense() {
+[ExtendObjectType(typeof(BaseQuery))]
+public class ExpenseQuery
+{
+    public Expense GetExpense(Guid id) {
         return new() {
             Id = Guid.NewGuid(),
             Description = "Expense description",
@@ -18,7 +20,6 @@ public class ExpensesQuery {
     }
 
     public async Task<IEnumerable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {
-        var result = await _expenseService.GetExpensesAsync(); 
-        return result;
+        return await _expenseService.GetExpensesAsync(); 
     }
 }
