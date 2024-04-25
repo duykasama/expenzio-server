@@ -6,17 +6,8 @@ namespace Expenzio.Api.Controllers.GraphQLApi;
 [ExtendObjectType(typeof(BaseQuery))]
 public class ExpenseQuery
 {
-    public Expense GetExpense(Guid id) {
-        return new() {
-            Id = Guid.NewGuid(),
-            Description = "Expense description",
-            Amount = 100,
-            MonetaryUnit = "USD",
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now,
-            IsDeleted = false,
-            CategoryId = Guid.NewGuid()
-        };
+    public async Task<Expense> GetExpense(Guid id, [Service] IExpenseService _expenseService) {
+        return await _expenseService.GetExpenseAsync(id);
     }
 
     public async Task<IEnumerable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {

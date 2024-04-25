@@ -20,11 +20,4 @@ public class ExpensesController : ControllerBase
         var result = await _expenseService.AddExpenseAsync(request, cancellationToken);
         return Ok(result);
     }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAllExpenses(CancellationToken cancellationToken = default)
-    {
-        var result = await _expenseService.GetExpensesAsync();
-        return Ok(result);
-    }
 }
