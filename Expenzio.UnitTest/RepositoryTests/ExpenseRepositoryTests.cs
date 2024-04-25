@@ -109,8 +109,8 @@ class ExpenseRepositoryTests
         var request = new CreateExpenseRequest()
         {
             Description = string.Empty,
-                        Amount = 100_000,
-                        MonetaryUnit = "VND",
+            Amount = 100_000,
+            MonetaryUnit = "VND",
         };
         var originalExpensesCount = (await _repo.GetAllAsync()).Count();
 
@@ -130,7 +130,7 @@ class ExpenseRepositoryTests
         var invalidRequest = new CreateExpenseRequest()
         {
             Description = string.Empty,
-                        Amount = 100_000,
+            Amount = 100_000,
         };
         var originalExpensesCount = (await _repo.GetAllAsync()).Count();
 
