@@ -22,4 +22,9 @@ public class ExpenseQuery
     public async Task<IEnumerable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {
         return await _expenseService.GetExpensesAsync(); 
     }
+
+    [UseOffsetPaging]
+    public async Task<IEnumerable<Expense>> GetPaginatedExpenses([Service] IExpenseService _expenseService) {
+        return await _expenseService.GetPaginatedExpensesAsync(); 
+    }
 }

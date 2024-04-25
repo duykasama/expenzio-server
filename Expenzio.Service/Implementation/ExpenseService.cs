@@ -41,6 +41,12 @@ public class ExpenseService : IExpenseService
             .Include(e => e.Category);
     }
 
+    public async Task<IQueryable<Expense>> GetPaginatedExpensesAsync()
+    {
+        return (await _expenseRepository.GetAllAsync())
+            .Include(e => e.Category);
+    }
+
     public Task<Expense> UpdateExpenseAsync(Expense expense)
     {
         throw new NotImplementedException();
