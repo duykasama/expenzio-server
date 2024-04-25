@@ -10,12 +10,8 @@ public class ExpenseQuery
         return await _expenseService.GetExpenseAsync(id);
     }
 
-    public async Task<IEnumerable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {
-        return await _expenseService.GetExpensesAsync(); 
-    }
-
     [UseOffsetPaging]
-    public async Task<IEnumerable<Expense>> GetPaginatedExpenses([Service] IExpenseService _expenseService) {
+    public async Task<IQueryable<Expense>> GetExpenses([Service] IExpenseService _expenseService) {
         return await _expenseService.GetPaginatedExpensesAsync(); 
     }
 }
