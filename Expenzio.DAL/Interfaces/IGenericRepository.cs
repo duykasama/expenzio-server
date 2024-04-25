@@ -22,7 +22,7 @@ public interface IGenericRepository<T> where T : class
     IQueryable<T> GetAll();
     Task<IQueryable<T>> GetAllAsync();
     T? Get(Expression<Func<T, bool>> predicate);
-    Task<T?> GetAsync(Expression<Func<T, bool>> predicate);
+    Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
     IQueryable<T> Find(Expression<Func<T, bool>> predicate);
     Task<IQueryable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     

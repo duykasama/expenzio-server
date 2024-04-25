@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenzio.Common", "Expenzio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenzio.Service", "Expenzio.Service\Expenzio.Service.csproj", "{D16E7396-7ACA-4DD3-A319-EC3850FFDB6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenzio.UnitTest", "Expenzio.UnitTest\Expenzio.UnitTest.csproj", "{CC5D0828-3B4C-44F4-96CD-43097D2A2D19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{D16E7396-7ACA-4DD3-A319-EC3850FFDB6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D16E7396-7ACA-4DD3-A319-EC3850FFDB6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D16E7396-7ACA-4DD3-A319-EC3850FFDB6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC5D0828-3B4C-44F4-96CD-43097D2A2D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5D0828-3B4C-44F4-96CD-43097D2A2D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5D0828-3B4C-44F4-96CD-43097D2A2D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5D0828-3B4C-44F4-96CD-43097D2A2D19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

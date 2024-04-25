@@ -86,14 +86,17 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         throw new NotImplementedException();
     }
 
-    public Task<IQueryable<T>> GetAllAsync()
+    public async Task<IQueryable<T>> GetAllAsync()
     {
-        return Task.FromResult(_dbSet.AsQueryable().AsNoTracking());
+        return await Task.FromResult(_dbSet.AsNoTracking());
     }
 
-    public Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+    public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return await _dbSet
+            .AsNoTracking()
+            .FirstOrDefaultAsync(predicate)
+            .ContinueWith(task => task.Result, cancellationToken);
     }
 
     public void Update(T entity)
