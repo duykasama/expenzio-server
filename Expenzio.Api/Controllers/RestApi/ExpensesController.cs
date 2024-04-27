@@ -1,9 +1,13 @@
+using Asp.Versioning;
+using Expenzio.Api.Controllers.RestApi.Base;
 using Expenzio.Domain.Models.Requests.Expense;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi;
 
+[ApiVersion(1)]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class ExpensesController : BaseApiController 
 {
     private readonly IExpenseService _expenseService;

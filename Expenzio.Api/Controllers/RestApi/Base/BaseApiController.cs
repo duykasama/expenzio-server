@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expenzio.Api.Controllers.RestApi;
+namespace Expenzio.Api.Controllers.RestApi.Base;
 
 [ApiController]
-[Route("api/[controller]")]
 public class BaseApiController : ControllerBase
 {
     protected async Task<IActionResult> ExecuteAsync<T>(Func<Task<T>> func)

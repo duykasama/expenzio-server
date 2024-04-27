@@ -1,9 +1,13 @@
+using Asp.Versioning;
+using Expenzio.Api.Controllers.RestApi.Base;
 using Expenzio.Domain.Models.Requests.Authentication;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi;
 
+[ApiVersion(1)]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
