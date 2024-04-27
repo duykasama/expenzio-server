@@ -1,3 +1,4 @@
+using Expenzio.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi.Base;
@@ -12,9 +13,12 @@ public class BaseApiController : ControllerBase
             var result = await func();
             return Ok(result);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return BadRequest(ex.Message);
+            if (e is ApiException apiException)
+                return StatusCode(apiException.StatusCode, apiException.Message);
+
+            return Problem(e.Message);
         }
     }
 }

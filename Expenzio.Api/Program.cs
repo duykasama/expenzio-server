@@ -13,6 +13,7 @@ builder.Services.ConfigureServices();
 builder.Services.ConfigureCors(builder.Configuration);
 builder.Services.ConfigureGraphQL();
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 builder.Services.AddApiVersioning();
 
 var app = builder.Build();
