@@ -1,5 +1,5 @@
 using Expenzio.Common.Interfaces;
-using Expenzio.Common.Models;
+using Expenzio.Domain.Models.Responses;
 using Expenzio.Domain.Models.Requests.Authentication;
 
 namespace Expenzio.Service.Interfaces;
