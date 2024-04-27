@@ -4,9 +4,8 @@ using Expenzio.Domain.Models.Requests.Authentication;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Expenzio.Api.Controllers.RestApi;
+namespace Expenzio.Api.Controllers.RestApi.V2;
 
-[ApiVersion(1)]
 [Route("api/v{version:apiVersion}/[controller]")]
 public class AuthController : BaseApiController
 {
@@ -17,21 +16,21 @@ public class AuthController : BaseApiController
         _authService = authService;
     }
 
-    [HttpPost]
+    [HttpPost, MapToApiVersion(2)]
     [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(
-            async () => await _authService.RegisterAsync(request, cancellationToken)
-        );
+            async () => await _authService.RegisterAsync(request, cancellationToken).ConfigureAwait(false)
+        ).ConfigureAwait(false);
     }
 
-    [HttpPost]
+    [HttpPost, MapToApiVersion(2)]
     [Route("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(
-            async () => await _authService.LoginAsync(request, cancellationToken)
-        );
+            async () => await _authService.LoginAsync(request, cancellationToken).ConfigureAwait(false)
+        ).ConfigureAwait(false);
     }
 }

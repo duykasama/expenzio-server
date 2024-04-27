@@ -1,9 +1,14 @@
+using Asp.Versioning;
+using Asp.Versioning.Conventions;
 using AutoMapper;
 using Expenzio.Api.Controllers.GraphQLApi;
 using Expenzio.Api.Settings;
+using Expenzio.Api.Swagger;
 using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Expenzio.Api.Extensions;
 
@@ -51,8 +56,6 @@ public static class ServiceCollectionExtensions {
     public static IServiceCollection ConfigureGraphQL(this IServiceCollection services) {
         var graphQl = services.AddGraphQLServer()
             .AddQueryType<BaseQuery>();
-            // .AddTypeExtension<ExpenseQuery>()
-            // .AddTypeExtension<ExpenseCategoryQuery>();
         var assemblyTypes = AppDomain
             .CurrentDomain
             .GetAssemblies()
@@ -62,6 +65,33 @@ public static class ServiceCollectionExtensions {
             if (Attribute.IsDefined(type, typeof(ExtendObjectTypeAttribute)))
                 graphQl.AddTypeExtension(type);
         }
+        return services;
+    }
+
+    public static IServiceCollection AddSwaggerWithVersioning(this IServiceCollection services) {
+        services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+        services.AddSwaggerGen(options => 
+            {
+                options.OperationFilter<SwaggerDefaultValues>();
+            });
+
+        services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+            .AddMvc(options => 
+            {
+                options.Conventions.Add(new VersionByNamespaceConvention());
+            })
+            .AddApiExplorer(options => 
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
         return services;
     }
 
