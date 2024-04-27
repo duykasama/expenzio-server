@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi;
 
-internal class AuthController : BaseApiController
+public class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
 
@@ -14,6 +14,7 @@ internal class AuthController : BaseApiController
     }
 
     [HttpPost]
+    [Route("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(
@@ -22,6 +23,7 @@ internal class AuthController : BaseApiController
     }
 
     [HttpPost]
+    [Route("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(

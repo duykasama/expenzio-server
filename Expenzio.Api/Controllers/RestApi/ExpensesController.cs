@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi;
 
-internal class ExpensesController : BaseApiController 
+public class ExpensesController : BaseApiController 
 {
     private readonly IExpenseService _expenseService;
     public ExpensesController(IExpenseService expenseService)

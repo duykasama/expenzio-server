@@ -4,7 +4,7 @@ namespace Expenzio.Api.Controllers.RestApi;
 
 [ApiController]
 [Route("api/[controller]")]
-internal class BaseApiController : ControllerBase
+public class BaseApiController : ControllerBase
 {
     protected async Task<IActionResult> ExecuteAsync<T>(Func<Task<T>> func)
     {
