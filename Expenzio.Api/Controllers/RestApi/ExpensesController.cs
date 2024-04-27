@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi;
 
-public class ExpensesController : BaseApiController 
+internal class ExpensesController : BaseApiController 
 {
     private readonly IExpenseService _expenseService;
     public ExpensesController(IExpenseService expenseService)
@@ -15,7 +15,8 @@ public class ExpensesController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> AddExpense([FromBody] CreateExpenseRequest request, CancellationToken cancellationToken = default)
     {
-        var result = await _expenseService.AddExpenseAsync(request, cancellationToken);
-        return Ok(result);
+        return await ExecuteAsync(
+            async () => await _expenseService.AddExpenseAsync(request, cancellationToken)
+        );
     }
 }
