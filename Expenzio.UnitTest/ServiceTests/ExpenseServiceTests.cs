@@ -9,7 +9,7 @@ using Expenzio.Service.Interfaces;
 using Expenzio.UnitTest.Helpers;
 using Moq;
 
-namespace Expenzio.UnitTest.Services;
+namespace Expenzio.UnitTest.ServiceTests;
 
 public class ExpenseServiceTests
 {
