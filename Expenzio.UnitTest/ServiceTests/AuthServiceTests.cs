@@ -1,93 +1,191 @@
+using System.Linq.Expressions;
 using AutoMapper;
-using expenzio.DAL.Interfaces;
+using Expenzio.Common.Exceptions;
 using Expenzio.Common.Helpers;
 using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
-using Expenzio.Domain.Models.Requests.Expense;
-using Expenzio.Service;
+using Expenzio.Domain.Models.Requests.Authentication;
+using Expenzio.Service.Implementation;
 using Expenzio.Service.Interfaces;
-using Expenzio.UnitTest.Helpers;
 using Moq;
 
 namespace Expenzio.UnitTest.Services;
 
-[Ignore("Not implemented yet")]
 public class AuthServiceTests
 {
-    private Mock<IExpenseRepository> _expenseRepository = new Mock<IExpenseRepository>();
-    private Mock<IExpenseCategoryRepository> _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
+    private Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
     private IMapper _mapper = null!;
-    private IExpenseService _expenseService = null!;
+    private IAuthService _authService = null!;
 
     [SetUp]
     public void Setup()
     {
-        _expenseRepository = new Mock<IExpenseRepository>();
-        _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
+        _userRepository = new Mock<IUserRepository>();
         _mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
             .CreateMapper();
-        _expenseService = new ExpenseService(_expenseRepository.Object, _mapper);
+        _authService = new AuthService(_userRepository.Object, _mapper);
     }
 
     [Test]
-    public async Task AddExpenseAsync_ShouldReturnExpense_WhenRequestIsValid()
+    public async Task RegisterUser_ShouldSucceed_WhenRequestIsValid()
     {
         // Arrange
-        var request = new CreateExpenseRequest
+        var request = new RegisterRequest
         {
-            Description = "Test Expense",
-            Amount = 100,
-            MonetaryUnit = "VND",
-            CategoryId = Guid.NewGuid(),
+            Email = "test.user@expenzio.com",
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+            LastName = "User",
         };
-
-        var expense = _mapper.Map<Expense>(request);
-
-        _expenseRepository.Setup(x => x.AddAsync(expense, default));
-
+        
         // Act
-        var result = await _expenseService.AddExpenseAsync(request);
+        var apiResponse = await _authService.RegisterAsync(request, default);
 
         // Assert
-        Assert.NotNull(result);
-        Assert.That(expense.Id, Is.EqualTo(result.Id));
-        Assert.That(expense.Description, Is.EqualTo(result.Description));
-        Assert.That(expense.Amount, Is.EqualTo(result.Amount));
-        Assert.That(expense.MonetaryUnit, Is.EqualTo(result.MonetaryUnit));
-        Assert.Less(expense.CreatedAt - result.CreatedAt, TimeSpan.FromSeconds(1));
+        Assert.NotNull(apiResponse);
+        Assert.That(apiResponse.Success, Is.True);
+        Assert.That(apiResponse.StatusCode, Is.EqualTo(201));
     }
 
     [Test]
-    public async Task GetExpensesAsync_ShouldReturnExpenses_WhenDataExists()
+    public void RegisterUser_ShouldThrowBadRequest_WhenEmailIsMissing()
     {
         // Arrange
-        var expenses = TestDataHelper.ExpensesData();
-        _expenseRepository.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(expenses.AsQueryable());
-
+        var request = new RegisterRequest
+        {
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
         // Act
-        var result = await _expenseService.GetExpensesAsync();
-
         // Assert
-        Assert.NotNull(result);
-        Assert.IsNotEmpty(result);
-        Assert.That(expenses.Count(), Is.EqualTo(result.Count()));
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
     }
 
     [Test]
-    public async Task GetExpensesAsync_ShouldReturnEmpty_WhenDataDoesNotExist()
+    public void RegisterUser_ShouldThrowBadRequest_WhenEmailIsIncorrect()
     {
         // Arrange
-        var expenses = TestDataHelper.EmptyExpenseData();
-        _expenseRepository.Setup(x => x.GetAllAsync())
-            .ReturnsAsync(expenses.AsQueryable());
-
+        var request = new RegisterRequest
+        {
+            Email = "test.user",
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
         // Act
-        var result = await _expenseService.GetExpensesAsync();
-
         // Assert
-        Assert.NotNull(result);
-        Assert.IsEmpty(result);
-        Assert.That(expenses.Count(), Is.EqualTo(result.Count()));
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenPasswordIsMissing()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
+            Phone = "0987654321",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenPasswordIsTooSimple()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
+            Password = "123",
+            Phone = "0987654321",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenPhoneNumberIsMissing()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenFirstNameIsMissing()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            LastName = "User",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenLastNameIsMissing()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldReturnFailureResponse_WhenEmailAlreadyExists()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "already.exists@expenzio.com",
+            Password = "$tr0ngP@$$w0rd123@@",
+            Phone = "0987654321",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        _userRepository.Setup(u => u.ExistsAsync(It.IsAny<Expression<Func<ExpenzioUser, bool>>>()))
+            .ReturnsAsync(true);
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<ConflictException>(async () => await _authService.RegisterAsync(request, default));
     }
 }
