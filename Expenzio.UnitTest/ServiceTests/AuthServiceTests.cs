@@ -36,6 +36,7 @@ public class AuthServiceTests
         var request = new RegisterRequest
         {
             Email = "test.user@expenzio.com",
+            Username = "test.user",
             Phone = "0987654321",
             Password = "$tr0ngP@$$w0rd123@@",
             FirstName = "Test",
@@ -57,6 +58,24 @@ public class AuthServiceTests
         // Arrange
         var request = new RegisterRequest
         {
+            Phone = "0987654321",
+            Password = "$tr0ngP@$$w0rd123@@",
+            FirstName = "Test",
+            LastName = "User",
+        };
+        
+        // Act
+        // Assert
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.RegisterAsync(request, default));
+    }
+
+    [Test]
+    public void RegisterUser_ShouldThrowBadRequest_WhenUsernameIsMissing()
+    {
+        // Arrange
+        var request = new RegisterRequest
+        {
+            Email = "test.user@expenzio.com",
             Phone = "0987654321",
             Password = "$tr0ngP@$$w0rd123@@",
             FirstName = "Test",
@@ -179,6 +198,7 @@ public class AuthServiceTests
         var request = new RegisterRequest
         {
             Email = "already.exists@expenzio.com",
+            Username = "already.exists",
             Password = "$tr0ngP@$$w0rd123@@",
             Phone = "0987654321",
             FirstName = "Test",
