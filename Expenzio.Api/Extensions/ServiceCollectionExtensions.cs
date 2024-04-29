@@ -7,6 +7,7 @@ using Expenzio.Api.Swagger;
 using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
+using Expenzio.Service.Settings;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -41,13 +42,15 @@ public static class ServiceCollectionExtensions {
         var corsSettings = configuration.GetSection(nameof(CorsSettings)).Get<CorsSettings>() ?? throw new ArgumentNullException(nameof(CorsSettings));
         services.AddCors(options => {
             foreach (var policy in corsSettings.Policies) {
-                options.AddPolicy(policy.Name, builder => {
-                    builder.WithOrigins(policy.AllowedOrigins)
-                        .WithMethods(policy.AllowedMethods)
-                        .WithHeaders(policy.AllowedHeaders);
-                    if (policy.AllowCredentials)
-                        builder.AllowCredentials();
-                });
+                options.AddPolicy(
+                    policy.Name, builder => {
+                        builder.WithOrigins(policy.AllowedOrigins)
+                            .WithMethods(policy.AllowedMethods)
+                            .WithHeaders(policy.AllowedHeaders);
+                        if (policy.AllowCredentials)
+                            builder.AllowCredentials();
+                    }
+                );
             }
         });
         return services;
@@ -95,12 +98,19 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    public static IServiceCollection ConfigureSettings(this IServiceCollection services, IConfiguration configuration) {
+        services.AddSingleton<JwtSettings>(configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>() ?? throw new ArgumentNullException(nameof(JwtSettings)));
+        return services;
+    }
+
     private static void EnsureRequiredAssembliesLoaded() {
-        var assemblyNames = new[] {
+        var assemblyNames = new[] 
+        {
             "Expenzio.DAL",
             "Expenzio.Service",
         };
-        foreach (var assemblyName in assemblyNames) {
+        foreach (var assemblyName in assemblyNames)
+        {
             AppDomain.CurrentDomain.Load(assemblyName);
         }
     }

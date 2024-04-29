@@ -18,7 +18,9 @@ public class ExpenzioDbContext : DbContext
     {
         base.OnConfiguring(optionsBuilder);
         if (optionsBuilder.IsConfigured) return;
-        optionsBuilder.UseNpgsql(DataAccessHelper.GetDefaultConnectionString());
+        optionsBuilder.UseNpgsql(DataAccessHelper.GetDefaultConnectionString())
+            .EnableSensitiveDataLogging()
+            .LogTo(Console.WriteLine);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

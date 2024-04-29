@@ -61,9 +61,9 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
         throw new NotImplementedException();
     }
 
-    public Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+    public async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await _dbSet.AnyAsync(predicate);
     }
 
     public IQueryable<T> Find(Expression<Func<T, bool>> predicate)

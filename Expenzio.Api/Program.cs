@@ -10,7 +10,10 @@ builder.Services.AddEndpointsApiExplorer();
 // builder.Services.AddSwaggerGen();
 
 // Add services for dependency injection to container.
-builder.Services.ConfigureServices();
+// builder.Services.ConfigureSettings(builder.Configuration);
+builder.Services
+    .ConfigureSettings(builder.Configuration)
+    .ConfigureServices();
 builder.Services.ConfigureCors(builder.Configuration);
 builder.Services.ConfigureGraphQL();
 builder.Services.AddControllers();

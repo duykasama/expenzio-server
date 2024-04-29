@@ -1,4 +1,5 @@
 using Expenzio.Common.Exceptions;
+using Expenzio.Domain.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi.Base;
@@ -11,6 +12,8 @@ public class BaseApiController : ControllerBase
         try
         {
             var result = await func();
+            if (result is ApiResponse apiResponse)
+                return StatusCode(apiResponse.StatusCode, apiResponse);
             return Ok(result);
         }
         catch (Exception e)

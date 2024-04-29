@@ -5,6 +5,7 @@ using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
 using Expenzio.Domain.Models.Requests.Authentication;
 using Expenzio.Domain.Models.Responses;
+using Expenzio.Service.Extensions;
 using Expenzio.Service.Helpers;
 using Expenzio.Service.Interfaces;
 
@@ -58,6 +59,7 @@ public class AuthService : IAuthService
         if (userExists) throw new ConflictException("User with this email already exists");
 
         user.Password = PasswordHelper.HashPassword(user.Password);
+        user.SetCreationInfo();
         await _userRepository.AddAsync(user, cancellationToken);
         return new ApiResponse(true, 201, "User registered successfully");
     }
@@ -68,6 +70,8 @@ public class AuthService : IAuthService
             return (false, "Email is required");
         if (string.IsNullOrWhiteSpace(request.Password))
             return (false, "Password is required");
+        if (string.IsNullOrWhiteSpace(request.Username))
+            return (false, "Username is required");
         if (string.IsNullOrWhiteSpace(request.Phone))
             return (false, "Phone is required");
         if (string.IsNullOrWhiteSpace(request.FirstName))

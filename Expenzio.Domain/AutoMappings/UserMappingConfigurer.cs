@@ -9,6 +9,7 @@ public class UserMappingConfigurer : IAutoMapperConfigurer
 {
     public void Configure(IMapperConfigurationExpression config)
     {
-        config.CreateMap<RegisterRequest, ExpenzioUser>();
+        config.CreateMap<RegisterRequest, ExpenzioUser>()
+            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src => src.Phone ?? "0000000000"));
     }
 }
