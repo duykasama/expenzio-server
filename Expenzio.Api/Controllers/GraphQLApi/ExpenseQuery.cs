@@ -1,9 +1,11 @@
 using Expenzio.Domain.Entities;
 using Expenzio.Service.Interfaces;
+using HotChocolate.Authorization;
 
 namespace Expenzio.Api.Controllers.GraphQLApi;
 
 [ExtendObjectType(typeof(BaseQuery))]
+[Authorize]
 public class ExpenseQuery
 {
     public async Task<Expense> GetExpense(Guid id, [Service] IExpenseService _expenseService) {

@@ -1,3 +1,4 @@
+using System.Text;
 using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using AutoMapper;
@@ -8,7 +9,9 @@ using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
 using Expenzio.Service.Settings;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Expenzio.Api.Extensions;
@@ -58,6 +61,7 @@ public static class ServiceCollectionExtensions {
 
     public static IServiceCollection ConfigureGraphQL(this IServiceCollection services) {
         var graphQl = services.AddGraphQLServer()
+            .AddAuthorization()
             .AddQueryType<BaseQuery>();
         var assemblyTypes = AppDomain
             .CurrentDomain
@@ -100,6 +104,24 @@ public static class ServiceCollectionExtensions {
 
     public static IServiceCollection ConfigureSettings(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton<JwtSettings>(configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>() ?? throw new ArgumentNullException(nameof(JwtSettings)));
+        return services;
+    }
+
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration) {
+        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>() ?? throw new ArgumentNullException(nameof(JwtSettings));
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SigningKey)),
+                    ValidateIssuerSigningKey = true,
+                };
+            });
         return services;
     }
 

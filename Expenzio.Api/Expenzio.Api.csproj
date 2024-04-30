@@ -10,6 +10,8 @@
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="14.0.0-p.85" />
+    <PackageReference Include="HotChocolate.AspNetCore.Authorization" Version="13.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     </ItemGroup>
@@ -19,11 +21,11 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="Scripts\001.Initialize_DB.sql" />
-        <EmbeddedResource Include="Scripts\001.Initialize_DB.sql" >
+        <EmbeddedResource Include="Scripts\001.Initialize_DB.sql">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
         <None Remove="Scripts\002.Create_Table_User.sql" />
-        <EmbeddedResource Include="Scripts\002.Create_Table_User.sql" >
+        <EmbeddedResource Include="Scripts\002.Create_Table_User.sql">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>
