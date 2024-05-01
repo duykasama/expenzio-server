@@ -12,4 +12,6 @@ public class ExpenzioUser
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public bool IsDeleted { get; set; }
+    public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

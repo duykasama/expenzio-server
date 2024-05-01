@@ -32,4 +32,13 @@ public class AuthController : BaseApiController
             async () => await _authService.LoginAsync(request, cancellationToken).ConfigureAwait(false)
         ).ConfigureAwait(false);
     }
+
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<IActionResult> RereshToken(CancellationToken cancellationToken)
+    {
+        return await ExecuteAsync(
+            async () => await _authService.RefreshTokenAsync(cancellationToken).ConfigureAwait(false)
+        ).ConfigureAwait(false);
+    }
 }

@@ -21,4 +21,11 @@ public interface IAuthService : IAutoRegisterable
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>ApiResponse</returns>
     Task<ApiResponse<TokenResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Generate access token based on provided refresh token
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>ApiResponse</returns>
+    Task<ApiResponse<TokenResponse>> RefreshTokenAsync(CancellationToken cancellationToken = default);
 }

@@ -7,6 +7,7 @@ using Expenzio.Domain.Models.Requests.Expense;
 using Expenzio.Service;
 using Expenzio.Service.Interfaces;
 using Expenzio.UnitTest.Helpers;
+using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace Expenzio.UnitTest.ServiceTests;
@@ -15,7 +16,7 @@ public class ExpenseServiceTests
 {
     private Mock<IExpenseRepository> _expenseRepository = new Mock<IExpenseRepository>();
     private Mock<IExpenseCategoryRepository> _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
-    private IMapper _mapper = null!;
+    private Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
     private IExpenseService _expenseService = null!;
 
     [SetUp]
@@ -23,9 +24,15 @@ public class ExpenseServiceTests
     {
         _expenseRepository = new Mock<IExpenseRepository>();
         _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
-        _mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        var mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
             .CreateMapper();
-        _expenseService = new ExpenseService(_expenseRepository.Object, _mapper);
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            mapper,
+            httpContextAccessor.Object,
+            _userRepository.Object
+        );
     }
 
     [Test]
@@ -39,8 +46,13 @@ public class ExpenseServiceTests
             MonetaryUnit = "VND",
             CategoryId = Guid.NewGuid(),
         };
-
-        var expense = _mapper.Map<Expense>(request);
+        var expense = new Expense()
+        {
+            Description = request.Description,
+            Amount = request.Amount,
+            MonetaryUnit = request.MonetaryUnit,
+            CategoryId = request.CategoryId
+        };
 
         _expenseRepository.Setup(x => x.AddAsync(expense, default));
 

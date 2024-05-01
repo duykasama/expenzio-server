@@ -8,6 +8,7 @@ using Expenzio.Domain.Models.Requests.Authentication;
 using Expenzio.Service.Helpers;
 using Expenzio.Service.Implementation;
 using Expenzio.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Moq;
 
 namespace Expenzio.UnitTest.ServiceTests;
@@ -16,7 +17,6 @@ public class AuthServiceTests
 {
     private Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
     private Mock<IJwtService> _jwtService = new Mock<IJwtService>();
-    private IMapper _mapper = null!;
     private IAuthService _authService = null!;
 
     [SetUp]
@@ -24,9 +24,15 @@ public class AuthServiceTests
     {
         _userRepository = new Mock<IUserRepository>();
         _jwtService = new Mock<IJwtService>();
-        _mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        var mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
             .CreateMapper();
-        _authService = new AuthService(_userRepository.Object, _mapper, _jwtService.Object);
+        _authService = new AuthService(
+            _userRepository.Object,
+            mapper,
+            _jwtService.Object,
+            httpContextAccessor.Object
+        );
     }
 
     [Test]

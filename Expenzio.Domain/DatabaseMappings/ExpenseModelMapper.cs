@@ -24,6 +24,11 @@ public class ExpenseModelMapper : IDatabaseModelMapper
                 .WithMany(c => c.Expenses)
                 .HasForeignKey(e => e.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.HasOne(e => e.User)
+                .WithMany(c => c.Expenses)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

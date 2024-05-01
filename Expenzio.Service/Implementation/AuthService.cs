@@ -8,6 +8,7 @@ using Expenzio.Domain.Models.Responses;
 using Expenzio.Service.Extensions;
 using Expenzio.Service.Helpers;
 using Expenzio.Service.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace Expenzio.Service.Implementation;
 
@@ -16,16 +17,19 @@ public class AuthService : IAuthService
     private readonly IUserRepository _userRepository;
     private readonly IJwtService _jwtService;
     private readonly IMapper _mapper;
+    private readonly HttpContext _httpContext;
 
     public AuthService(
         IUserRepository userRepository,
         IMapper mapper,
-        IJwtService jwtService
+        IJwtService jwtService,
+        IHttpContextAccessor httpContextAccessor
     )
     {
         _userRepository = userRepository;
         _jwtService = jwtService;
         _mapper = mapper;
+        _httpContext = httpContextAccessor.HttpContext;
     }
     
     public async Task<ApiResponse<TokenResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
@@ -35,6 +39,14 @@ public class AuthService : IAuthService
         var user = await _userRepository.GetAsync(u => u.Email == request.Email, cancellationToken);
         if (user == null) throw new NotFoundException("User not found");
         if (!PasswordHelper.VerifyPassword(request.Password, user.Password)) throw new UnauthorizedException("Invalid password");
+        var refreshToken = _jwtService.GenerateRefreshToken(user.Id);
+        _httpContext.Response.Cookies.Append("refresh_token", refreshToken, new ()
+        {
+            HttpOnly = true,
+            MaxAge = TimeSpan.FromHours(8),
+            Expires = DateTime.UtcNow.AddHours(8),
+            Secure = true,
+        });
         return new ApiResponse<TokenResponse>
         (
             success: true,
@@ -44,7 +56,7 @@ public class AuthService : IAuthService
             {
                 // TODO: Get roles from user
                 AccessToken = _jwtService.GenerateAccessToken(user, new string[] { "User" }),
-                RefreshToken = _jwtService.GenerateRefreshToken(user.Id),
+                RefreshToken = refreshToken,
                 ExpiresAt = DateTime.UtcNow.AddMinutes(15)
             }
         );
@@ -94,5 +106,26 @@ public class AuthService : IAuthService
             return (false, "Password is required");
 
         return (true, string.Empty);
+    }
+
+    // TODO: Unit test
+    public async Task<ApiResponse<TokenResponse>> RefreshTokenAsync(CancellationToken cancellationToken = default)
+    {
+        var cookies = _httpContext.Request.Cookies;
+        var refreshToken = cookies.FirstOrDefault(c => c.Key == "refresh_token").Value;
+        if (refreshToken == null) throw new UnauthorizedException();
+
+
+        return new (
+            success: true,
+            statusCode: 200,
+            message: "",
+            data: new TokenResponse()
+            {
+                AccessToken = "",
+                RefreshToken = "",
+                ExpiresAt = DateTime.UtcNow,
+            }
+        );
     }
 }

@@ -19,6 +19,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Expenzio.Service\Expenzio.Service.csproj" />
     </ItemGroup>
+
     <ItemGroup>
         <None Remove="Scripts\001.Initialize_DB.sql" />
         <EmbeddedResource Include="Scripts\001.Initialize_DB.sql">
@@ -26,6 +27,14 @@
         </EmbeddedResource>
         <None Remove="Scripts\002.Create_Table_User.sql" />
         <EmbeddedResource Include="Scripts\002.Create_Table_User.sql">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="Scripts\003.Add_ForeignKey_For_User_And_Expense_Tables.sql" />
+        <EmbeddedResource Include="Scripts\003.Add_ForeignKey_For_User_And_Expense_Tables.sql">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <None Remove="Scripts\004.Add_Refresh_Token_Table.sql" />
+        <EmbeddedResource Include="Scripts\004.Add_Refresh_Token_Table.sql">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
     </ItemGroup>

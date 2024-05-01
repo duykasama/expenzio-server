@@ -9,5 +9,7 @@ public class Expense {
     public DateTime UpdatedAt { get; set; }
     public bool IsDeleted { get; set; }
     public Guid CategoryId { get; set; }
+    public Guid UserId { get; set; }
+    public ExpenzioUser User { get; set; } = null!;
     public ExpenseCategory Category { get; set; } = null!;
 }
