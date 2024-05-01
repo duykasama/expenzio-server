@@ -25,11 +25,11 @@ public class AuthController : BaseApiController
     }
 
     [HttpPost]
-    [Route("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
+    [Route("log-in")]
+    public async Task<IActionResult> LogIn([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(
-            async () => await _authService.LoginAsync(request, cancellationToken).ConfigureAwait(false)
+            async () => await _authService.LogInAsync(request, cancellationToken).ConfigureAwait(false)
         ).ConfigureAwait(false);
     }
 
@@ -39,6 +39,15 @@ public class AuthController : BaseApiController
     {
         return await ExecuteAsync(
             async () => await _authService.RefreshTokenAsync(cancellationToken).ConfigureAwait(false)
+        ).ConfigureAwait(false);
+    }
+
+    [HttpPost]
+    [Route("log-out")]
+    public async Task<IActionResult> LogOut()
+    {
+        return await ExecuteAsync(
+            async () => await _authService.LogOutAsync().ConfigureAwait(false)
         ).ConfigureAwait(false);
     }
 }

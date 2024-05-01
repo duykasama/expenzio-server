@@ -30,7 +30,7 @@ public class AuthController : BaseApiController
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken cancellationToken = default)
     {
         return await ExecuteAsync(
-            async () => await _authService.LoginAsync(request, cancellationToken).ConfigureAwait(false)
+            async () => await _authService.LogInAsync(request, cancellationToken).ConfigureAwait(false)
         ).ConfigureAwait(false);
     }
 }

@@ -32,7 +32,7 @@ public class AuthService : IAuthService
         _httpContext = httpContextAccessor.HttpContext;
     }
     
-    public async Task<ApiResponse<TokenResponse>> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResponse<TokenResponse>> LogInAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
         var (validRequest, errorMessage) = ValidateLoginRequest(request);
         if (!validRequest) throw new BadRequestException(errorMessage);
@@ -115,7 +115,6 @@ public class AuthService : IAuthService
         var refreshToken = cookies.FirstOrDefault(c => c.Key == "refresh_token").Value;
         if (refreshToken == null) throw new UnauthorizedException();
 
-
         return new (
             success: true,
             statusCode: 200,
@@ -126,6 +125,21 @@ public class AuthService : IAuthService
                 RefreshToken = "",
                 ExpiresAt = DateTime.UtcNow,
             }
+        );
+    }
+
+    // TODO: Unit test
+    public async Task<ApiResponse> LogOutAsync()
+    {
+        var cookies = _httpContext.Request.Cookies;
+        var refreshToken = cookies.FirstOrDefault(c => c.Key == "refresh_token").Value;
+        if (refreshToken == null) throw new UnauthorizedException("You are not logged in");
+        _httpContext.Response.Cookies.Delete("refresh_token");
+
+        return new (
+            success: true,
+            statusCode: 200,
+            message: "Logged out successfully"
         );
     }
 }
