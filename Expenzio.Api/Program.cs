@@ -7,16 +7,14 @@ DataAccessHelper.SetConfiguration(builder.Configuration);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
 
 // Add services for dependency injection to container.
-// builder.Services.ConfigureSettings(builder.Configuration);
 builder.Services
     .ConfigureSettings(builder.Configuration)
     .ConfigureServices();
 builder.Services.ConfigureCors(builder.Configuration);
 builder.Services.ConfigureGraphQL();
-builder.Services.AddControllers();
+builder.Services.AddControllersWithLocalization();
 builder.Services.AddProblemDetails();
 builder.Services.AddSwaggerWithVersioning();
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -38,6 +36,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.MapGraphQL();
+app.UseCustomRequestLocalization();
 DataAccessHelper.EnsureMigration(AppDomain.CurrentDomain.FriendlyName);
 app.Run();
 

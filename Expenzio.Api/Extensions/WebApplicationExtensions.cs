@@ -1,3 +1,5 @@
+using Expenzio.Api.Settings;
+
 namespace Expenzio.Api.Extensions;
 
 public static class WebApplicationExtensions
@@ -13,6 +15,19 @@ public static class WebApplicationExtensions
                 var name = description.GroupName.ToUpperInvariant();
                 options.SwaggerEndpoint(url, name);
             }
+        });
+        return app;
+    }
+    
+    public static WebApplication UseCustomRequestLocalization(this WebApplication app)
+    {
+        var localizationSettings = app.Configuration.GetSection(nameof(LocalizationSettings)).Get<LocalizationSettings>();
+        ArgumentNullException.ThrowIfNull(localizationSettings);
+        app.UseRequestLocalization(options =>
+        {
+            options.SetDefaultCulture(localizationSettings.DefaultCulture);
+            options.AddSupportedCultures(localizationSettings.SupportedCultures);
+            options.AddSupportedUICultures(localizationSettings.SupportedCultures);
         });
         return app;
     }

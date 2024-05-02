@@ -8,8 +8,10 @@ using Expenzio.Api.Swagger;
 using Expenzio.Common.Helpers;
 using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
+using Expenzio.Service.Implementation;
 using Expenzio.Service.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -103,7 +105,14 @@ public static class ServiceCollectionExtensions {
     }
 
     public static IServiceCollection ConfigureSettings(this IServiceCollection services, IConfiguration configuration) {
-        services.AddSingleton<JwtSettings>(configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>() ?? throw new ArgumentNullException(nameof(JwtSettings)));
+        var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
+        ArgumentNullException.ThrowIfNull(jwtSettings);
+        services.AddSingleton<JwtSettings>(jwtSettings);
+
+        var localizationSettings = configuration.GetSection(nameof(LocalizationSettings)).Get<LocalizationSettings>();
+        ArgumentNullException.ThrowIfNull(localizationSettings);
+        services.AddSingleton<LocalizationSettings>(localizationSettings);
+
         return services;
     }
 
@@ -122,6 +131,17 @@ public static class ServiceCollectionExtensions {
                     ValidateIssuerSigningKey = true,
                 };
             });
+        return services;
+    }
+
+    public static IServiceCollection AddControllersWithLocalization(this IServiceCollection services)
+    {
+        // StringLocalizationHelper.GenerateResxFilesFromJson(LocalizationFileConstants.JSON_FILES_LOCATION, LocalizationFileConstants.RESX_FILES_LOCATION);
+        services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
+        services
+            .AddControllers()
+            .AddViewLocalization()
+            .AddDataAnnotationsLocalization();
         return services;
     }
 

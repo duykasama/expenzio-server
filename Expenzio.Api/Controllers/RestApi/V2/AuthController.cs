@@ -1,8 +1,10 @@
 using Asp.Versioning;
 using Expenzio.Api.Controllers.RestApi.Base;
+using Expenzio.Api.Resources;
 using Expenzio.Domain.Models.Requests.Authentication;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace Expenzio.Api.Controllers.RestApi.V2;
 
@@ -10,10 +12,12 @@ namespace Expenzio.Api.Controllers.RestApi.V2;
 public class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
+    private readonly IStringLocalizer<Messages> _localizer;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IStringLocalizer<Messages> localizer)
     {
         _authService = authService;
+        _localizer = localizer;
     }
 
     [HttpPost, MapToApiVersion(2)]
@@ -32,5 +36,12 @@ public class AuthController : BaseApiController
         return await ExecuteAsync(
             async () => await _authService.LogInAsync(request, cancellationToken).ConfigureAwait(false)
         ).ConfigureAwait(false);
+    }
+
+    [HttpGet]
+    [Route("test/{text}")]
+    public async Task<IActionResult> Test(string text)
+    {
+        return await Task.FromResult(Ok(_localizer[text].Value));
     }
 }
