@@ -242,7 +242,7 @@ public class AuthServiceTests
             .Returns("refresh-token");
 
         // Act
-        var apiResponse = await _authService.LoginAsync(request, default);
+        var apiResponse = await _authService.LogInAsync(request, default);
 
         // Assert
         Assert.NotNull(apiResponse);
@@ -265,7 +265,7 @@ public class AuthServiceTests
 
         // Act
         // Assert
-        Assert.ThrowsAsync<NotFoundException>(async () => await _authService.LoginAsync(request, default));
+        Assert.ThrowsAsync<NotFoundException>(async () => await _authService.LogInAsync(request, default));
     }
 
     [Test]
@@ -279,7 +279,7 @@ public class AuthServiceTests
 
         // Act
         // Assert
-        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.LoginAsync(request, default));
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.LogInAsync(request, default));
     }
 
     [Test]
@@ -293,7 +293,7 @@ public class AuthServiceTests
 
         // Act
         // Assert
-        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.LoginAsync(request, default));
+        Assert.ThrowsAsync<BadRequestException>(async () => await _authService.LogInAsync(request, default));
     }
 
     [Test]
@@ -317,6 +317,6 @@ public class AuthServiceTests
         
         // Act
         // Assert
-        Assert.ThrowsAsync<UnauthorizedException>(async () => await _authService.LoginAsync(request, default));
+        Assert.ThrowsAsync<UnauthorizedException>(async () => await _authService.LogInAsync(request, default));
     }
 }
