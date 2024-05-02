@@ -18,20 +18,22 @@ public class AuthServiceTests
     private Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
     private Mock<IJwtService> _jwtService = new Mock<IJwtService>();
     private IAuthService _authService = null!;
+    private IMapper _mapper = null!;
+    private Mock<IHttpContextAccessor> _httpContextAccessor = new Mock<IHttpContextAccessor>();
 
     [SetUp]
     public void Setup()
     {
         _userRepository = new Mock<IUserRepository>();
         _jwtService = new Mock<IJwtService>();
-        var httpContextAccessor = new Mock<IHttpContextAccessor>();
-        var mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
+        _httpContextAccessor = new Mock<IHttpContextAccessor>();
+        _mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
             .CreateMapper();
         _authService = new AuthService(
             _userRepository.Object,
-            mapper,
+            _mapper,
             _jwtService.Object,
-            httpContextAccessor.Object
+            _httpContextAccessor.Object
         );
     }
 
@@ -240,6 +242,14 @@ public class AuthServiceTests
             .Returns("access-token");
         _jwtService.Setup(j => j.GenerateRefreshToken(It.IsAny<Guid>()))
             .Returns("refresh-token");
+        _httpContextAccessor.Setup(h => h.HttpContext)
+            .Returns(new DefaultHttpContext());
+        _authService = new AuthService(
+            _userRepository.Object,
+            _mapper,
+            _jwtService.Object,
+            _httpContextAccessor.Object
+        );
 
         // Act
         var apiResponse = await _authService.LogInAsync(request, default);
