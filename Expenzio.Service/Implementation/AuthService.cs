@@ -32,6 +32,7 @@ public class AuthService : IAuthService
         _httpContext = httpContextAccessor.HttpContext;
     }
     
+    /// <inheritdoc />
     public async Task<ApiResponse<TokenResponse>> LogInAsync(LoginRequest request, CancellationToken cancellationToken = default)
     {
         var (validRequest, errorMessage) = ValidateLoginRequest(request);
@@ -62,6 +63,7 @@ public class AuthService : IAuthService
         );
     }
 
+    /// <inheritdoc />
     public async Task<ApiResponse> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
     {
         var (validRequest, errorMessage) = ValidateRegisterRequest(request);
@@ -109,6 +111,7 @@ public class AuthService : IAuthService
     }
 
     // TODO: Unit test
+    /// <inheritdoc />
     public async Task<ApiResponse<TokenResponse>> RefreshTokenAsync(CancellationToken cancellationToken = default)
     {
         var cookies = _httpContext.Request.Cookies;
@@ -129,6 +132,7 @@ public class AuthService : IAuthService
     }
 
     // TODO: Unit test
+    /// <inheritdoc />
     public async Task<ApiResponse> LogOutAsync()
     {
         var cookies = _httpContext.Request.Cookies;

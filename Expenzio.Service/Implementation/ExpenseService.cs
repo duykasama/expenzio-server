@@ -30,6 +30,7 @@ public class ExpenseService : IExpenseService
         _userRepository = userRepository;
     }
 
+    /// <inheritdoc />
     public async Task<Expense> AddExpenseAsync(CreateExpenseRequest request, CancellationToken cancellationToken = default)
     {
         var expense = _mapper.Map<Expense>(request);
@@ -37,12 +38,14 @@ public class ExpenseService : IExpenseService
         return expense;
     }
 
+    /// <inheritdoc />
     public Task DeleteExpenseAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
     // TODO: Unit test
+    /// <inheritdoc />
     public async Task<IQueryable<Expense>> GetDailyExpensesByUserIdAsync()
     {
         var nameIdentifierClaim = _httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
@@ -56,23 +59,27 @@ public class ExpenseService : IExpenseService
         return expenses;
     }
 
+    /// <inheritdoc />
     public Task<Expense> GetExpenseAsync(Guid id)
     {
         throw new NotImplementedException();
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<Expense>> GetExpensesAsync()
     {
         return (await _expenseRepository.GetAllAsync())
             .Include(e => e.Category);
     }
 
+    /// <inheritdoc />
     public async Task<IQueryable<Expense>> GetPaginatedExpensesAsync()
     {
         return (await _expenseRepository.GetAllAsync())
             .Include(e => e.Category);
     }
 
+    /// <inheritdoc />
     public Task<Expense> UpdateExpenseAsync(Expense expense)
     {
         throw new NotImplementedException();

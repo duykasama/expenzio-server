@@ -4,6 +4,12 @@ namespace Expenzio.Api.Extensions;
 
 public static class WebApplicationExtensions
 {
+
+    /// <summary>
+    /// Use Swagger UI with versioning.
+    /// </summary>
+    /// <param name="app">The WebApplication instance.</param>
+    /// <returns>The WebApplication instance.</returns>
     public static WebApplication UseSwaggerUIWithVersioning(this WebApplication app)
     {
         app.UseSwaggerUI(options =>
@@ -19,6 +25,11 @@ public static class WebApplicationExtensions
         return app;
     }
     
+    /// <summary>
+    /// Use request localization.
+    /// </summary>
+    /// <param name="app">The WebApplication instance.</param>
+    /// <returns>The WebApplication instance.</returns>
     public static WebApplication UseCustomRequestLocalization(this WebApplication app)
     {
         var localizationSettings = app.Configuration.GetSection(nameof(LocalizationSettings)).Get<LocalizationSettings>();

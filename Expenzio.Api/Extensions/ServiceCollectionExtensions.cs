@@ -19,6 +19,12 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace Expenzio.Api.Extensions;
 
 public static class ServiceCollectionExtensions {
+
+    /// <summary>
+    /// Configure services for dependency injection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection ConfigureServices(this IServiceCollection services) {
         EnsureRequiredAssembliesLoaded();
         services.AddScoped<ExpenzioDbContext>();
@@ -43,6 +49,12 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Configure CORS.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <param name="configuration">The IConfiguration instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection ConfigureCors(this IServiceCollection services, IConfiguration configuration) {
         var corsSettings = configuration.GetSection(nameof(CorsSettings)).Get<CorsSettings>() ?? throw new ArgumentNullException(nameof(CorsSettings));
         services.AddCors(options => {
@@ -61,6 +73,11 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Configure GraphQL.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection ConfigureGraphQL(this IServiceCollection services) {
         var graphQl = services.AddGraphQLServer()
             .AddAuthorization()
@@ -77,6 +94,11 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Add Swagger with api versioning.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection AddSwaggerWithVersioning(this IServiceCollection services) {
         services.AddSingleton<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
         services.AddSwaggerGen(options => 
@@ -104,6 +126,12 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Configure settings from appsettings.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <param name="configuration">The IConfiguration instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection ConfigureSettings(this IServiceCollection services, IConfiguration configuration) {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>();
         ArgumentNullException.ThrowIfNull(jwtSettings);
@@ -116,6 +144,12 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Add JWT authentication.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <param name="configuration">The IConfiguration instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration) {
         var jwtSettings = configuration.GetSection(nameof(JwtSettings)).Get<JwtSettings>() ?? throw new ArgumentNullException(nameof(JwtSettings));
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -134,9 +168,13 @@ public static class ServiceCollectionExtensions {
         return services;
     }
 
+    /// <summary>
+    /// Add controllers with localization.
+    /// </summary>
+    /// <param name="services">The IServiceCollection instance.</param>
+    /// <returns>The services.</returns>
     public static IServiceCollection AddControllersWithLocalization(this IServiceCollection services)
     {
-        // StringLocalizationHelper.GenerateResxFilesFromJson(LocalizationFileConstants.JSON_FILES_LOCATION, LocalizationFileConstants.RESX_FILES_LOCATION);
         services.AddSingleton<IStringLocalizerFactory, JsonStringLocalizerFactory>();
         services
             .AddControllers()

@@ -13,6 +13,7 @@ public class ExpenseCategoryService : IExpenseCategoryService
         _categoryRepository = categoryRespository;
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<ExpenseCategory>> GetCategoriesAsync()
     {
         return await _categoryRepository.GetAllAsync();

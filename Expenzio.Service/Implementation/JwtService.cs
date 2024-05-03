@@ -17,6 +17,7 @@ public class JwtService : IJwtService
         _jwtSettings = jwtSettings;
     }
 
+    /// <inheritdoc />
     public string GenerateAccessToken(ExpenzioUser user, IEnumerable<string> roles)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SigningKey));
@@ -44,6 +45,7 @@ public class JwtService : IJwtService
         return tokenHandler.WriteToken(token);
     }
 
+    /// <inheritdoc />
     public string GenerateRefreshToken(Guid userId)
     {
         // TODO: Implement refresh token generation
