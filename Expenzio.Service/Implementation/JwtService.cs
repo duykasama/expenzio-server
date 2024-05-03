@@ -8,6 +8,7 @@ using Expenzio.Service.Interfaces;
 using Expenzio.Service.Settings;
 using Microsoft.IdentityModel.Tokens;
 
+/// <inheritdoc />
 public class JwtService : IJwtService
 {
     private readonly JwtSettings _jwtSettings;

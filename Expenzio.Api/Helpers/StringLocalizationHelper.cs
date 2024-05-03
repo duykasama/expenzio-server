@@ -5,6 +5,9 @@ using Path = System.IO.Path;
 
 namespace Expenzio.Api.Helpers;
 
+/// <summary>
+/// String localization helper to generate .resx files from .json files.
+/// </summary>
 public static class StringLocalizationHelper
 {
     private const string XmlHeader = "<?xml version=\"1.0\" encoding=\"utf-8\"?>";

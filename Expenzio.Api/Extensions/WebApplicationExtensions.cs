@@ -2,6 +2,9 @@ using Expenzio.Api.Settings;
 
 namespace Expenzio.Api.Extensions;
 
+/// <summary>
+/// Contains extension methods for <see cref="WebApplication" />.
+/// </summary>
 public static class WebApplicationExtensions
 {
 

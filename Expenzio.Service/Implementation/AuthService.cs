@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Expenzio.Service.Implementation;
 
+/// <inheritdoc />
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;

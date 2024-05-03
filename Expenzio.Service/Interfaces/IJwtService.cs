@@ -3,6 +3,12 @@ using Expenzio.Domain.Entities;
 
 namespace Expenzio.Service.Interfaces;
 
+/// <summary>
+/// Represents the JWT service.
+/// </summary>
+/// <remarks>
+/// This interface contains methods related to JWT.
+/// </remarks>
 public interface IJwtService : IAutoRegisterable
 {
     /// <summary>

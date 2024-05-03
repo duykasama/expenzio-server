@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expenzio.Service;
 
+/// <inheritdoc />
 public class ExpenseService : IExpenseService
 {
     private readonly IExpenseRepository _expenseRepository;

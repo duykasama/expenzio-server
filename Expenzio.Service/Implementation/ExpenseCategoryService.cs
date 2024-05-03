@@ -4,6 +4,7 @@ using Expenzio.Service.Interfaces;
 
 namespace Expenzio.Service.Implementation;
 
+/// <inheritdoc />
 public class ExpenseCategoryService : IExpenseCategoryService
 {
     private readonly IExpenseCategoryRepository _categoryRepository;

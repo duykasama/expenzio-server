@@ -18,6 +18,9 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Expenzio.Api.Extensions;
 
+/// <summary>
+/// Contains extension methods for <see cref="IServiceCollection" />.
+/// </summary>
 public static class ServiceCollectionExtensions {
 
     /// <summary>

@@ -2,6 +2,12 @@ using BCryptHasher = BCrypt.Net.BCrypt;
 
 namespace Expenzio.Service.Helpers;
 
+/// <summary>
+/// Represents the password helper.
+/// </summary>
+/// <remarks>
+/// This class is used to hash and verify passwords.
+/// </remarks>
 public static class PasswordHelper
 {
     /// <summary>

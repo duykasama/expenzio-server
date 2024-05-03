@@ -4,6 +4,12 @@ using Expenzio.Domain.Models.Requests.Authentication;
 
 namespace Expenzio.Service.Interfaces;
 
+/// <summary>
+/// Service for authentication.
+/// </summary>
+/// <remarks>
+/// This class contains methods for user authentication.
+/// </remarks>
 public interface IAuthService : IAutoRegisterable
 {
     /// <summary>

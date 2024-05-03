@@ -4,6 +4,12 @@ using HotChocolate.Authorization;
 
 namespace Expenzio.Api.Controllers.GraphQLApi;
 
+/// <summary>
+/// Represents the expense query.
+/// </summary>
+/// <remarks>
+/// This class contains queries for expenses.
+/// </remarks>
 [ExtendObjectType(typeof(BaseQuery))]
 [Authorize]
 public sealed class ExpenseQuery

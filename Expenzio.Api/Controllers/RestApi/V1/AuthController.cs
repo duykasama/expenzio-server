@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi.V1;
 
+/// <summary>
+/// Controller for authentication.
+/// </summary>
+/// <remarks>
+/// This class contains endpoints for authentication.
+/// </remarks>
 [Route("api/v{version:apiVersion}/[controller]")]
 public sealed class AuthController : BaseApiController
 {

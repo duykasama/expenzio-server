@@ -4,6 +4,12 @@ using Expenzio.Domain.Models.Requests.Expense;
 
 namespace Expenzio.Service.Interfaces;
 
+/// <summary>
+/// Represents the expense service.
+/// </summary>
+/// <remarks>
+/// This interface contains methods for expenses.
+/// </remarks>
 public interface IExpenseService : IAutoRegisterable
 {
     /// <summary>

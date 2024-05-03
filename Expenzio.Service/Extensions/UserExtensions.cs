@@ -2,6 +2,12 @@ using Expenzio.Domain.Entities;
 
 namespace Expenzio.Service.Extensions;
 
+/// <summary>
+/// User extensions.
+/// </summary>
+/// <remarks>
+/// This class contains extension methods for the user entity.
+/// </remarks>
 public static class UserExtensions
 {
     /// <summary>

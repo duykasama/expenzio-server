@@ -5,6 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi.V1;
 
+/// <summary>
+/// Controller for expenses.
+/// </summary>
+/// <remarks>
+/// This class contains endpoints for expenses.
+/// </remarks>
 [Route("api/v{version:apiVersion}/[controller]")]
 public sealed class ExpensesController : BaseApiController 
 {

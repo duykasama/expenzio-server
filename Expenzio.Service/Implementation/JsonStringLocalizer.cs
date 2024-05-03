@@ -3,6 +3,12 @@ using Microsoft.Extensions.Localization;
 
 namespace Expenzio.Service.Implementation;
 
+/// <summary>
+/// Represents the JSON string localizer.
+/// </summary>
+/// <remarks>
+/// This class is used to localize strings from JSON files.
+/// </remarks>
 public abstract class JsonStringLocalizer : IStringLocalizer
 {
     public LocalizedString this[string name]

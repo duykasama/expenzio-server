@@ -2,6 +2,12 @@ using Microsoft.Extensions.Localization;
 
 namespace Expenzio.Service.Implementation;
 
+/// <summary>
+/// Represents the JSON string localizer factory.
+/// </summary>
+/// <remarks>
+/// This class is used to create a new <see cref="IStringLocalizer"/> for a given <paramref name="resourceSource"/>.
+/// </remarks>
 public class JsonStringLocalizerFactory : IStringLocalizerFactory
 {
     /// <summary>

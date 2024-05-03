@@ -4,8 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expenzio.Api.Controllers.RestApi.Base;
 
+/// <summary>
+/// Base API controller.
+/// </summary>
+/// <remarks>
+/// This class contains common methods for API controllers.
+/// </remarks>
 [ApiController]
-public class BaseApiController : ControllerBase
+public abstract class BaseApiController : ControllerBase
 {
     protected async Task<IActionResult> ExecuteAsync<T>(Func<Task<T>> func)
     {

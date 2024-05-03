@@ -3,6 +3,12 @@ using Expenzio.Service.Interfaces;
 
 namespace Expenzio.Api.Controllers.GraphQLApi;
 
+/// <summary>
+/// Represents the expense category query.
+/// </summary>
+/// <remarks>
+/// This class contains queries for expense categories.
+/// </remarks>
 [ExtendObjectType(typeof(BaseQuery))]
 public sealed class ExpenseCategoryQuery
 {
