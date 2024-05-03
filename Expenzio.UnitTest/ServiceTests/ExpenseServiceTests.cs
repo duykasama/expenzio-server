@@ -1,5 +1,8 @@
+using System.Linq.Expressions;
+using System.Security.Claims;
 using AutoMapper;
 using expenzio.DAL.Interfaces;
+using Expenzio.Common.Exceptions;
 using Expenzio.Common.Helpers;
 using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
@@ -17,20 +20,22 @@ public class ExpenseServiceTests
     private Mock<IExpenseRepository> _expenseRepository = new Mock<IExpenseRepository>();
     private Mock<IExpenseCategoryRepository> _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
     private Mock<IUserRepository> _userRepository = new Mock<IUserRepository>();
+    private Mock<IHttpContextAccessor> _httpContextAccessor = new Mock<IHttpContextAccessor>();
     private IExpenseService _expenseService = null!;
+    private IMapper _mapper = null!;
 
     [SetUp]
     public void Setup()
     {
         _expenseRepository = new Mock<IExpenseRepository>();
         _expenseCategoryRepository = new Mock<IExpenseCategoryRepository>();
-        var httpContextAccessor = new Mock<IHttpContextAccessor>();
-        var mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
+        _httpContextAccessor = new Mock<IHttpContextAccessor>();
+        _mapper = new MapperConfiguration(AutoMapperConfigurationHelper.Configure)
             .CreateMapper();
         _expenseService = new ExpenseService(
             _expenseRepository.Object,
-            mapper,
-            httpContextAccessor.Object,
+            _mapper,
+            _httpContextAccessor.Object,
             _userRepository.Object
         );
     }
@@ -100,5 +105,85 @@ public class ExpenseServiceTests
         Assert.NotNull(result);
         Assert.IsEmpty(result);
         Assert.That(expenses.Count(), Is.EqualTo(result.Count()));
+    }
+
+    [Test]
+    public async Task GetWeeklyExpensesAsync_ShouldReturnExpenses_WhenRequestIsValid()
+    {
+        // Arrange
+        var validClaim = new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString());
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim exists
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(validClaim);
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        // Ensure user exists
+        _userRepository.Setup(uR => uR.ExistsAsync(It.IsAny<Expression<Func<ExpenzioUser, bool>>>()))
+            .ReturnsAsync(true);
+        // Mock data
+        _expenseRepository.Setup(eR => eR.FindAsync(It.IsAny<Expression<Func<Expense, bool>>>()))
+            .ReturnsAsync(TestDataHelper.ExpensesData().AsQueryable());
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        var result = await _expenseService.GetWeeklyExpensesAsync();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsNotEmpty(result);
+    }
+
+    [Test]
+    public void GetWeeklyExpensesAsync_ShouldThrowNotFound_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var validClaim = new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString());
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim exists
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(validClaim);
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        // Ensure user does not exist
+        _userRepository.Setup(uR => uR.ExistsAsync(It.IsAny<Expression<Func<ExpenzioUser, bool>>>()))
+            .ReturnsAsync(false);
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<NotFoundException>(async () => await _expenseService.GetWeeklyExpensesAsync());
+    }
+
+    [Test]
+    public void GetWeeklyExpensesAsync_ShouldThrowUnauthorized_WhenUserIdDoesNotExistsInClaimPrincipals()
+    {
+        // Arrange
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim does not exist
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(It.IsAny<Claim>());
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<UnauthorizedException>(async () => await _expenseService.GetWeeklyExpensesAsync());
     }
 }

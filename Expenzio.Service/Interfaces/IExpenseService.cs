@@ -33,4 +33,10 @@ public interface IExpenseService : IAutoRegisterable
     /// </summary>
     /// <returns>Task of IQueryable of Expense</returns>
     Task<IQueryable<Expense>> GetDailyExpensesByUserIdAsync();
+
+    /// <summary>
+    /// Get weekly expenses by user id
+    /// </summary>
+    /// <returns>Task of IQueryable of Expense</returns>
+    Task<IQueryable<Expense>> GetWeeklyExpensesAsync();
 }

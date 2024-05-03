@@ -49,11 +49,7 @@ public class ExpenseService : IExpenseService
     /// <inheritdoc />
     public async Task<IQueryable<Expense>> GetDailyExpensesByUserIdAsync()
     {
-        var nameIdentifierClaim = _httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrEmpty(nameIdentifierClaim?.Value)) throw new UnauthorizedException("User is not authenticated");
-        var userId = Guid.Parse(nameIdentifierClaim.Value);
-        var userExists = await _userRepository.ExistsAsync(u => !u.IsDeleted && u.Id == userId);
-        if (!userExists) throw new NotFoundException("User not found");
+        var userId = await GetUserIdFromRequest();
         var expenses = (await _expenseRepository.GetAllAsync())
             .Where(e => e.UserId == userId && e.CreatedAt.Date == DateTime.UtcNow.Date);
         
@@ -81,8 +77,45 @@ public class ExpenseService : IExpenseService
     }
 
     /// <inheritdoc />
+    public async Task<IQueryable<Expense>> GetWeeklyExpensesAsync()
+    {
+        var userId = await GetUserIdFromRequest();
+        var today = DateTime.UtcNow.Date;
+        var monday = today.DayOfWeek switch
+        {
+            DayOfWeek.Sunday => today.AddDays(-6),
+            DayOfWeek.Saturday => today.AddDays(-5),
+            DayOfWeek.Friday => today.AddDays(-4),
+            DayOfWeek.Thursday => today.AddDays(-3),
+            DayOfWeek.Wednesday => today.AddDays(-2),
+            DayOfWeek.Tuesday => today.AddDays(-1),
+            _ => today,
+        };
+        var sunday = monday.AddDays(6);
+        var expenses = await _expenseRepository
+            .FindAsync(e => e.UserId == userId && e.CreatedAt.Date >= monday && e.CreatedAt.Date <= sunday);
+        return expenses;
+    }
+
+    /// <inheritdoc />
     public Task<Expense> UpdateExpenseAsync(Expense expense)
     {
         throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Verifies the user based on the <see cref="ClaimTypes.NameIdentifier" /> claim.
+    /// </summary>
+    /// <exception cref="UnauthorizedException">Thrown if the user is not authenticated.</exception>
+    /// <exception cref="NotFoundException">Thrown if the user is not found.</exception>
+    /// <returns>The user id.</returns>
+    private async Task<Guid> GetUserIdFromRequest()
+    {
+        var nameIdentifierClaim = _httpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+        UnauthorizedException.ThrowIfNullOrEmpty(nameIdentifierClaim?.Value, "User is not authenticated");
+        var userId = Guid.Parse(nameIdentifierClaim!.Value);
+        var userExists = await _userRepository.ExistsAsync(u => !u.IsDeleted && u.Id == userId);
+        NotFoundException.ThrowIfTrue(!userExists, "User not found");
+        return userId;
     }
 }
