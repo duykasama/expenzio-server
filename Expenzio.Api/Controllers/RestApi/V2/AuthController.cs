@@ -9,7 +9,7 @@ using Microsoft.Extensions.Localization;
 namespace Expenzio.Api.Controllers.RestApi.V2;
 
 [Route("api/v{version:apiVersion}/[controller]")]
-public class AuthController : BaseApiController
+public sealed class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
     private readonly IStringLocalizer<Messages> _localizer;

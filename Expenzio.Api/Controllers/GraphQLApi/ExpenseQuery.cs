@@ -6,7 +6,7 @@ namespace Expenzio.Api.Controllers.GraphQLApi;
 
 [ExtendObjectType(typeof(BaseQuery))]
 [Authorize]
-public class ExpenseQuery
+public sealed class ExpenseQuery
 {
     public async Task<Expense> GetExpense(Guid id, [Service] IExpenseService _expenseService)
     {

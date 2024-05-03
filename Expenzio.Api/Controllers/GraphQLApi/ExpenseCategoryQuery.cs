@@ -4,7 +4,7 @@ using Expenzio.Service.Interfaces;
 namespace Expenzio.Api.Controllers.GraphQLApi;
 
 [ExtendObjectType(typeof(BaseQuery))]
-public class ExpenseCategoryQuery
+public sealed class ExpenseCategoryQuery
 {
     public ExpenseCategory GetExpenseCategory()
     {

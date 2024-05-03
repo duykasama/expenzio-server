@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Expenzio.Api.Controllers.RestApi.V1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
-public class ExpensesController : BaseApiController 
+public sealed class ExpensesController : BaseApiController 
 {
     private readonly IExpenseService _expenseService;
     public ExpensesController(IExpenseService expenseService)

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Expenzio.Api.Controllers.RestApi.V1;
 
 [Route("api/v{version:apiVersion}/[controller]")]
-public class AuthController : BaseApiController
+public sealed class AuthController : BaseApiController
 {
     private readonly IAuthService _authService;
 
