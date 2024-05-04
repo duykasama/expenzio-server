@@ -186,4 +186,84 @@ public class ExpenseServiceTests
         // Assert
         Assert.ThrowsAsync<UnauthorizedException>(async () => await _expenseService.GetWeeklyExpensesAsync());
     }
+
+    [Test]
+    public async Task GetMonthlyExpensesAsync_ShouldReturnExpenses_WhenRequestIsValid()
+    {
+        // Arrange
+        var validClaim = new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString());
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim exists
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(validClaim);
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        // Ensure user exists
+        _userRepository.Setup(uR => uR.ExistsAsync(It.IsAny<Expression<Func<ExpenzioUser, bool>>>()))
+            .ReturnsAsync(true);
+        // Mock data
+        _expenseRepository.Setup(eR => eR.FindAsync(It.IsAny<Expression<Func<Expense, bool>>>()))
+            .ReturnsAsync(TestDataHelper.ExpensesData().AsQueryable());
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        var result = await _expenseService.GetMonthlyExpensesAsync();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsNotEmpty(result);
+    }
+
+    [Test]
+    public void GetMonthlyExpensesAsync_ShouldThrowNotFound_WhenUserDoesNotExist()
+    {
+        // Arrange
+        var validClaim = new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString());
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim exists
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(validClaim);
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        // Ensure user does not exist
+        _userRepository.Setup(uR => uR.ExistsAsync(It.IsAny<Expression<Func<ExpenzioUser, bool>>>()))
+            .ReturnsAsync(false);
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<NotFoundException>(async () => await _expenseService.GetMonthlyExpensesAsync());
+    }
+
+    [Test]
+    public void GetMonthlyExpensesAsync_ShouldThrowUnauthorized_WhenUserIdDoesNotExistsInClaimPrincipals()
+    {
+        // Arrange
+        var httpContext = new Mock<HttpContext>();
+        // Ensure claim does not exist
+        httpContext.Setup(c => c.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(It.IsAny<Claim>());
+        _httpContextAccessor.Setup(a => a.HttpContext)
+            .Returns(httpContext.Object);
+        _expenseService = new ExpenseService(
+            _expenseRepository.Object,
+            _mapper,
+            _httpContextAccessor.Object,
+            _userRepository.Object
+        );
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<UnauthorizedException>(async () => await _expenseService.GetMonthlyExpensesAsync());
+    }
 }

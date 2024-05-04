@@ -70,6 +70,17 @@ public class ExpenseService : IExpenseService
     }
 
     /// <inheritdoc />
+    public async Task<IQueryable<Expense>> GetMonthlyExpensesAsync()
+    {
+        var userId = await GetUserIdFromRequest();
+        var firstDateOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+        var lastDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+        var expenses = await _expenseRepository
+            .FindAsync(e => e.UserId == userId && e.CreatedAt >= firstDateOfMonth && e.CreatedAt <= lastDayOfMonth);
+        return expenses;
+    }
+
+    /// <inheritdoc />
     public async Task<IQueryable<Expense>> GetPaginatedExpensesAsync()
     {
         return (await _expenseRepository.GetAllAsync())
