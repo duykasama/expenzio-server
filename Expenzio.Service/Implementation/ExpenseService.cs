@@ -91,20 +91,13 @@ public class ExpenseService : IExpenseService
     public async Task<IQueryable<Expense>> GetWeeklyExpensesAsync()
     {
         var userId = await GetUserIdFromRequest();
-        var today = DateTime.UtcNow.Date;
-        var monday = today.DayOfWeek switch
-        {
-            DayOfWeek.Sunday => today.AddDays(-6),
-            DayOfWeek.Saturday => today.AddDays(-5),
-            DayOfWeek.Friday => today.AddDays(-4),
-            DayOfWeek.Thursday => today.AddDays(-3),
-            DayOfWeek.Wednesday => today.AddDays(-2),
-            DayOfWeek.Tuesday => today.AddDays(-1),
-            _ => today,
-        };
+        var today = DateTime.Today;
+        int diff = DayOfWeek.Monday - today.DayOfWeek;
+        if (diff > 0) diff -= 7;
+        var monday = today.AddDays(diff);
         var sunday = monday.AddDays(6);
         var expenses = await _expenseRepository
-            .FindAsync(e => e.UserId == userId && e.CreatedAt.Date >= monday && e.CreatedAt.Date <= sunday);
+            .FindAsync(e => e.UserId == userId && e.CreatedAt >= monday && e.CreatedAt <= sunday);
         return expenses;
     }
 
