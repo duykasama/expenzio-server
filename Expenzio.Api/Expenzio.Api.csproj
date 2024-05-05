@@ -38,6 +38,10 @@
         <EmbeddedResource Include="Scripts\004.Add_Refresh_Token_Table.sql">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="Scripts\005.Add_ForeignKey_For_User_And_ExpenseCategory_Tables.sql" />
+        <EmbeddedResource Include="Scripts\005.Add_ForeignKey_For_User_And_ExpenseCategory_Tables.sql">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <!-- <Target Name="PreBuild" BeforeTargets="BeforeBuild"> -->

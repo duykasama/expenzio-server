@@ -14,4 +14,5 @@ public class ExpenzioUser
     public bool IsDeleted { get; set; }
     public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
     public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+    public ICollection<ExpenseCategory> ExpenseCategories { get; set; } = new List<ExpenseCategory>();
 }

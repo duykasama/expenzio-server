@@ -15,6 +15,8 @@ public class ExpenseCategoryModelMapper : IDatabaseModelMapper
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Description).HasColumnName("description");
             entity.Property(e => e.Name).HasColumnName("name");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.HasOne(e => e.User).WithMany(u => u.ExpenseCategories).HasForeignKey(e => e.UserId);
         });
     }
 }
