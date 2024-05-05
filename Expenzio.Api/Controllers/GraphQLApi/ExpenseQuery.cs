@@ -36,4 +36,10 @@ public sealed class ExpenseQuery
     {
         return await _expenseService.GetWeeklyExpensesAsync();
     }
+
+    [UseOffsetPaging]
+    public async Task<IQueryable<Expense>> GetMonthlyExpenses([Service] IExpenseService _expenseService)
+    {
+        return await _expenseService.GetMonthlyExpensesAsync();
+    }
 }
