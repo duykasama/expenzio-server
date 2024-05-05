@@ -33,19 +33,21 @@ public class ExpenseCategoryService : IExpenseCategoryService
         _mapper = mapper;
     }
 
-    // TODO: Unit test
     /// <inheritdoc />
     public async  Task<ApiResponse> CreateExpenseCategoryAsync(CreateExpenseCategoryRequest request, CancellationToken cancellationToken)
     {
         var userId = await GetUserIdFromRequest();
+        ValidateCreateExpenseCategoryRequest(request);
         var category = _mapper.Map<ExpenseCategory>(request);
         category.UserId = userId;
         await _categoryRepository.AddAsync(category, cancellationToken);
+        var createdCategory = _mapper.Map<CreatedExpenseCategoryResponse>(category);
         return new ApiResponse
         (
             success: true,
-            statusCode: (int)HttpStatusCode.Created,
-            message: "Category created successfully"
+            statusCode: StatusCodes.Status201Created,
+            message: "Category created successfully",
+            data: createdCategory
         );
     }
 
@@ -69,5 +71,10 @@ public class ExpenseCategoryService : IExpenseCategoryService
         var userExists = await _userRepository.ExistsAsync(u => !u.IsDeleted && u.Id == userId);
         NotFoundException.ThrowIfTrue(!userExists, "User not found");
         return userId;
+    }
+
+    private void ValidateCreateExpenseCategoryRequest(CreateExpenseCategoryRequest request)
+    {
+        BadRequestException.ThrowIfTrue(string.IsNullOrEmpty(request.Name), "Category name is required");
     }
 }

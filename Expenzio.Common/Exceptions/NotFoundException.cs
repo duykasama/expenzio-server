@@ -1,3 +1,6 @@
+using System.Net;
+using Expenzio.Common.Extensions;
+
 namespace Expenzio.Common.Exceptions;
 
 /// <summary>
@@ -8,11 +11,11 @@ namespace Expenzio.Common.Exceptions;
 /// </remarks>
 public class NotFoundException : ApiException
 {
-    public NotFoundException(string message) : base(message, 404)
+    public NotFoundException(string message) : base(message, HttpStatusCode.NotFound.ToIntValue())
     {
     }
 
-    public NotFoundException() : base("Not found", 404)
+    public NotFoundException() : base("Not found", HttpStatusCode.NotFound.ToIntValue())
     {
     }
 

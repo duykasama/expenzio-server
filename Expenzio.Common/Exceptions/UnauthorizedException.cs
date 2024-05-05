@@ -1,3 +1,6 @@
+using System.Net;
+using Expenzio.Common.Extensions;
+
 namespace Expenzio.Common.Exceptions;
 
 /// <summary>
@@ -8,11 +11,11 @@ namespace Expenzio.Common.Exceptions;
 /// </remarks>
 public class UnauthorizedException : ApiException
 {
-    public UnauthorizedException(string message) : base(message, 401)
+    public UnauthorizedException(string message) : base(message, HttpStatusCode.Unauthorized.ToIntValue())
     {
     }
 
-    public UnauthorizedException() : base("Unauthorized", 401)
+    public UnauthorizedException() : base("Unauthorized", HttpStatusCode.Unauthorized.ToIntValue())
     {
     }
 

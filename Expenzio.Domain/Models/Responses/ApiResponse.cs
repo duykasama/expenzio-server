@@ -21,4 +21,8 @@ public class ApiResponse : ApiResponse<object?>
     public ApiResponse(bool success, int statusCode, string message) : base(success, statusCode, message, null)
     {
     }
+
+    public ApiResponse(bool success, int statusCode, string message, object data) : base(success, statusCode, message, data)
+    {
+    }
 }
