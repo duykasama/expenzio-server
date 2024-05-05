@@ -3,6 +3,12 @@ using Expenzio.Common.Extensions;
 
 namespace Expenzio.Common.Exceptions;
 
+/// <summary>
+/// Represents a bad request exception.
+/// </summary>
+/// <remarks>
+/// This class is an alternative to the <see cref="System.BadRequestException" /> class in order to return a status code of 400 by controllers.
+/// </remarks>
 public class BadRequestException : ApiException
 {
     public BadRequestException(string message) : base(message, HttpStatusCode.BadRequest.ToIntValue())
