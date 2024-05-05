@@ -6,8 +6,8 @@ using Expenzio.Api.Controllers.GraphQLApi;
 using Expenzio.Api.Settings;
 using Expenzio.Api.Swagger;
 using Expenzio.Common.Helpers;
-using Expenzio.Common.Interfaces;
 using Expenzio.DAL.Data;
+using Expenzio.Common.Attributes;
 using Expenzio.Service.Implementation;
 using Expenzio.Service.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -36,13 +36,25 @@ public static class ServiceCollectionExtensions {
             .GetAssemblies()
             .SelectMany(t => t.GetTypes())
             .ToList();
-        var autoRegisterableTypes = assemblyTypes.Where(t => t.IsInterface && typeof(IAutoRegisterable).IsAssignableFrom(t) && t != typeof(IAutoRegisterable));
-        var numb = autoRegisterableTypes.Count();
+        var autoRegisterableTypes = assemblyTypes.Where(t => t.IsInterface && Attribute.IsDefined(t, typeof(AutoRegisterAttribute)));
         foreach (var registerableType in autoRegisterableTypes)
         {
+            var lifetime = ServiceLifetime.Scoped;
+            registerableType.GetCustomAttributes(false)
+            .ToList()
+            .ForEach(attr => 
+            {
+                if (attr is AutoRegisterAttribute autoRegisterAttribute)
+                    lifetime = autoRegisterAttribute.Lifetime;
+            });
             var implementationType = assemblyTypes.FirstOrDefault(t => t.IsClass && !t.IsAbstract && registerableType.IsAssignableFrom(t));
             if (implementationType is null) continue;
-            services.AddScoped(registerableType, implementationType);
+            var _ = lifetime switch
+            {
+                ServiceLifetime.Singleton => services.AddSingleton(registerableType, implementationType),
+                ServiceLifetime.Transient => services.AddTransient(registerableType, implementationType),
+                _ => services.AddScoped(registerableType, implementationType),
+            };
         }
 
         var config = new MapperConfiguration(AutoMapperConfigurationHelper.Configure);

@@ -1,5 +1,6 @@
-using Expenzio.Common.Interfaces;
+using Expenzio.Common.Attributes;
 using Expenzio.Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Expenzio.Service.Interfaces;
 
@@ -9,7 +10,8 @@ namespace Expenzio.Service.Interfaces;
 /// <remarks>
 /// This interface contains methods related to JWT.
 /// </remarks>
-public interface IJwtService : IAutoRegisterable
+[AutoRegister(ServiceLifetime.Scoped)]
+public interface IJwtService
 {
     /// <summary>
     /// Generates an access token for the given user.

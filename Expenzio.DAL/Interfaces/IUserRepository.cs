@@ -1,8 +1,10 @@
-using Expenzio.Common.Interfaces;
+using Expenzio.Common.Attributes;
 using Expenzio.Domain.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Expenzio.DAL.Interfaces;
 
-public interface IUserRepository : IGenericRepository<ExpenzioUser>, IAutoRegisterable
+[AutoRegister(ServiceLifetime.Scoped)]
+public interface IUserRepository : IGenericRepository<ExpenzioUser>
 {
 }

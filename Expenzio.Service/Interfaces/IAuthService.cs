@@ -1,6 +1,7 @@
-using Expenzio.Common.Interfaces;
 using Expenzio.Domain.Models.Responses;
 using Expenzio.Domain.Models.Requests.Authentication;
+using Expenzio.Common.Attributes;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Expenzio.Service.Interfaces;
 
@@ -10,7 +11,8 @@ namespace Expenzio.Service.Interfaces;
 /// <remarks>
 /// This class contains methods for user authentication.
 /// </remarks>
-public interface IAuthService : IAutoRegisterable
+[AutoRegister(ServiceLifetime.Scoped)]
+public interface IAuthService
 {
     /// <summary>
     /// Register user

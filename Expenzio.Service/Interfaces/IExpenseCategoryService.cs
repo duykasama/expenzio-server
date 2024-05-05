@@ -1,7 +1,8 @@
-using Expenzio.Common.Interfaces;
+using Expenzio.Common.Attributes;
 using Expenzio.Domain.Entities;
 using Expenzio.Domain.Models.Requests;
 using Expenzio.Domain.Models.Responses;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Expenzio.Service.Interfaces;
 
@@ -11,7 +12,8 @@ namespace Expenzio.Service.Interfaces;
 /// <remarks>
 /// This interface contains methods for expense categories.
 /// </remarks>
-public interface IExpenseCategoryService : IAutoRegisterable
+[AutoRegister(ServiceLifetime.Scoped)]
+public interface IExpenseCategoryService
 {
     /// <summary>
     /// Create an expense category
