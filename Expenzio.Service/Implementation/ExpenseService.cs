@@ -4,6 +4,7 @@ using Expenzio.Common.Exceptions;
 using Expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
 using Expenzio.Domain.Models.Requests.Expense;
+using Expenzio.Service.Extensions;
 using Expenzio.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -73,8 +74,12 @@ public class ExpenseService : IExpenseService
     public async Task<IQueryable<Expense>> GetMonthlyExpensesAsync()
     {
         var userId = await GetUserIdFromRequest();
-        var firstDateOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-        var lastDayOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+        var firstDateOfMonth = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).SpecifyKind(DateTimeKind.Utc);
+        var lastDayOfMonth = new DateTime(
+            DateTime.Now.Year,
+            DateTime.Now.Month,
+            DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)
+        ).SpecifyKind(DateTimeKind.Utc);
         var expenses = await _expenseRepository
             .FindAsync(e => e.UserId == userId && e.CreatedAt >= firstDateOfMonth && e.CreatedAt <= lastDayOfMonth);
         return expenses;
@@ -91,7 +96,7 @@ public class ExpenseService : IExpenseService
     public async Task<IQueryable<Expense>> GetWeeklyExpensesAsync()
     {
         var userId = await GetUserIdFromRequest();
-        var today = DateTime.Today;
+        var today = DateTime.Today.SpecifyKind(DateTimeKind.Utc);
         int diff = DayOfWeek.Monday - today.DayOfWeek;
         if (diff > 0) diff -= 7;
         var monday = today.AddDays(diff);
