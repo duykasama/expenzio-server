@@ -1,5 +1,7 @@
 using expenzio.DAL.Interfaces;
 using Expenzio.Domain.Entities;
+using Expenzio.Domain.Models.Requests;
+using Expenzio.Domain.Models.Responses;
 using Expenzio.Service.Interfaces;
 
 namespace Expenzio.Service.Implementation;
@@ -12,6 +14,12 @@ public class ExpenseCategoryService : IExpenseCategoryService
     public ExpenseCategoryService(IExpenseCategoryRepository categoryRespository)
     {
         _categoryRepository = categoryRespository;
+    }
+
+    /// <inheritdoc />
+    public Task<ApiResponse> CreateExpenseCategoryAsync(CreateExpenseCategoryRequest request, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 
     /// <inheritdoc />
