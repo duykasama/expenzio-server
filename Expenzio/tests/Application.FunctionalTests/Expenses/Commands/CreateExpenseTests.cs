@@ -1,18 +1,18 @@
 ﻿using Expenzio.Application.Common.Exceptions;
-using Expenzio.Application.TodoItems.Commands.CreateTodoItem;
-using Expenzio.Application.TodoLists.Commands.CreateTodoList;
+using Expenzio.Application.ExpenseCategories.Commands.CreateExpenseCategory;
+using Expenzio.Application.Expenses.Commands.CreateExpense;
 using Expenzio.Domain.Entities;
 
-namespace Expenzio.Application.FunctionalTests.TodoItems.Commands;
+namespace Expenzio.Application.FunctionalTests.Expenses.Commands;
 
 using static Testing;
 
-public class CreateTodoItemTests : BaseTestFixture
+public class CreateExpenseTests : BaseTestFixture
 {
     [Test]
     public async Task ShouldRequireMinimumFields()
     {
-        var command = new CreateTodoItemCommand();
+        var command = new CreateExpenseCommand();
 
         await FluentActions.Invoking(() =>
             SendAsync(command)).Should().ThrowAsync<ValidationException>();
@@ -23,12 +23,11 @@ public class CreateTodoItemTests : BaseTestFixture
     {
         var userId = await RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await SendAsync(new CreateExpenseCategoryCommand
         {
-            Title = "New List"
         });
 
-        var command = new CreateTodoItemCommand
+        var command = new CreateExpenseCommand
         {
             ListId = listId,
             Title = "Tasks"
@@ -36,11 +35,11 @@ public class CreateTodoItemTests : BaseTestFixture
 
         var itemId = await SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await FindAsync<Expense>(itemId);
 
         item.Should().NotBeNull();
-        item!.ListId.Should().Be(command.ListId);
-        item.Title.Should().Be(command.Title);
+        item!.Id.Should().Be(command.ListId);
+        item.Description.Should().Be(command.Title);
         item.CreatedBy.Should().Be(userId);
         item.Created.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
         item.LastModifiedBy.Should().Be(userId);

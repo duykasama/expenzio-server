@@ -1,38 +1,37 @@
 ﻿using Expenzio.Application.Common.Exceptions;
-using Expenzio.Application.TodoLists.Commands.CreateTodoList;
-using Expenzio.Application.TodoLists.Commands.UpdateTodoList;
+using Expenzio.Application.ExpenseCategories.Commands.CreateExpenseCategory;
+using Expenzio.Application.ExpenseCategories.Commands.UpdateExpenseCategory;
 using Expenzio.Domain.Entities;
 
 namespace Expenzio.Application.FunctionalTests.TodoLists.Commands;
 
 using static Testing;
 
-public class UpdateTodoListTests : BaseTestFixture
+public class UpdateExpenseCategoryTests : BaseTestFixture
 {
     [Test]
     public async Task ShouldRequireValidTodoListId()
     {
-        var command = new UpdateTodoListCommand { Id = 99, Title = "New Title" };
+        var command = new UpdateExpenseCategoryCommand { Id = Guid.NewGuid(), Title = "New Title" };
         await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
     [Test]
     public async Task ShouldRequireUniqueTitle()
     {
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await SendAsync(new CreateExpenseCategoryCommand
         {
-            Title = "New List"
+            Description = "New List"
         });
 
-        await SendAsync(new CreateTodoListCommand
+        await SendAsync(new CreateExpenseCategoryCommand 
         {
-            Title = "Other List"
+            Description = "Other List"
         });
 
-        var command = new UpdateTodoListCommand
+        var command = new CreateExpenseCategoryCommand 
         {
-            Id = listId,
-            Title = "Other List"
+            Description = "Other List"
         };
 
         (await FluentActions.Invoking(() =>
@@ -46,12 +45,12 @@ public class UpdateTodoListTests : BaseTestFixture
     {
         var userId = await RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await SendAsync(new CreateExpenseCategoryCommand
         {
-            Title = "New List"
+            Description = "New List"
         });
 
-        var command = new UpdateTodoListCommand
+        var command = new UpdateExpenseCategoryCommand
         {
             Id = listId,
             Title = "Updated List Title"
@@ -59,10 +58,10 @@ public class UpdateTodoListTests : BaseTestFixture
 
         await SendAsync(command);
 
-        var list = await FindAsync<TodoList>(listId);
+        var list = await FindAsync<ExpenseCategory>(listId);
 
         list.Should().NotBeNull();
-        list!.Title.Should().Be(command.Title);
+        list!.Description.Should().Be(command.Title);
         list.LastModifiedBy.Should().NotBeNull();
         list.LastModifiedBy.Should().Be(userId);
         list.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

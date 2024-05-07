@@ -1,31 +1,31 @@
 ﻿using Expenzio.Application.Common.Exceptions;
-using Expenzio.Application.TodoLists.Commands.CreateTodoList;
+using Expenzio.Application.ExpenseCategories.Commands.CreateExpenseCategory;
 using Expenzio.Domain.Entities;
 
 namespace Expenzio.Application.FunctionalTests.TodoLists.Commands;
 
 using static Testing;
 
-public class CreateTodoListTests : BaseTestFixture
+public class CreateExpenseCategoryTests : BaseTestFixture
 {
     [Test]
     public async Task ShouldRequireMinimumFields()
     {
-        var command = new CreateTodoListCommand();
+        var command = new CreateExpenseCategoryCommand();
         await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<ValidationException>();
     }
 
     [Test]
     public async Task ShouldRequireUniqueTitle()
     {
-        await SendAsync(new CreateTodoListCommand
+        await SendAsync(new CreateExpenseCategoryCommand
         {
-            Title = "Shopping"
+            Description = "Shopping"
         });
 
-        var command = new CreateTodoListCommand
+        var command = new CreateExpenseCategoryCommand
         {
-            Title = "Shopping"
+            Description = "Shopping"
         };
 
         await FluentActions.Invoking(() =>
@@ -37,17 +37,17 @@ public class CreateTodoListTests : BaseTestFixture
     {
         var userId = await RunAsDefaultUserAsync();
 
-        var command = new CreateTodoListCommand
+        var command = new CreateExpenseCategoryCommand
         {
-            Title = "Tasks"
+            Description = "Tasks"
         };
 
         var id = await SendAsync(command);
 
-        var list = await FindAsync<TodoList>(id);
+        var list = await FindAsync<Expense>(id);
 
         list.Should().NotBeNull();
-        list!.Title.Should().Be(command.Title);
+        list!.Description.Should().Be(command.Description);
         list.CreatedBy.Should().Be(userId);
         list.Created.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
     }

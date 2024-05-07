@@ -8,7 +8,7 @@ public record UpdateExpenseDetailCommand : IRequest
 {
     public Guid Id { get; init; }
 
-    public int ListId { get; init; }
+    public Guid ListId { get; init; }
 
     public PriorityLevel Priority { get; init; }
 

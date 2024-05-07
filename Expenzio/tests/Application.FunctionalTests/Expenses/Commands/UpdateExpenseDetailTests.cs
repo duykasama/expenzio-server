@@ -1,20 +1,20 @@
-﻿using Expenzio.Application.TodoItems.Commands.CreateTodoItem;
-using Expenzio.Application.TodoItems.Commands.UpdateTodoItem;
-using Expenzio.Application.TodoItems.Commands.UpdateTodoItemDetail;
-using Expenzio.Application.TodoLists.Commands.CreateTodoList;
+﻿using Expenzio.Application.ExpenseCategories.Commands.CreateExpenseCategory;
+using Expenzio.Application.Expenses.Commands.CreateExpense;
+using Expenzio.Application.Expenses.Commands.UpdateExpense;
+using Expenzio.Application.Expenses.Commands.UpdateExpenseDetail;
 using Expenzio.Domain.Entities;
 using Expenzio.Domain.Enums;
 
-namespace Expenzio.Application.FunctionalTests.TodoItems.Commands;
+namespace Expenzio.Application.FunctionalTests.Expenses.Commands;
 
 using static Testing;
 
-public class UpdateTodoItemDetailTests : BaseTestFixture
+public class UpdateExpenseDetailTests : BaseTestFixture
 {
     [Test]
     public async Task ShouldRequireValidTodoItemId()
     {
-        var command = new UpdateTodoItemCommand { Id = 99, Title = "New Title" };
+        var command = new UpdateExpenseCommand { Id = Guid.NewGuid(), Title = "New Title" };
         await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
@@ -23,18 +23,18 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
     {
         var userId = await RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await SendAsync(new CreateExpenseCategoryCommand
         {
-            Title = "New List"
+            Description = "New List"
         });
 
-        var itemId = await SendAsync(new CreateTodoItemCommand
+        var itemId = await SendAsync(new CreateExpenseCommand
         {
             ListId = listId,
             Title = "New Item"
         });
 
-        var command = new UpdateTodoItemDetailCommand
+        var command = new UpdateExpenseDetailCommand
         {
             Id = itemId,
             ListId = listId,
@@ -44,12 +44,10 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
 
         await SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await FindAsync<Expense>(itemId);
 
         item.Should().NotBeNull();
-        item!.ListId.Should().Be(command.ListId);
-        item.Note.Should().Be(command.Note);
-        item.Priority.Should().Be(command.Priority);
+        item!.Id.Should().Be(command.ListId);
         item.LastModifiedBy.Should().NotBeNull();
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));

@@ -6,7 +6,7 @@ namespace Expenzio.Application.Expenses.Commands.CreateExpense;
 
 public record CreateExpenseCommand : IRequest<Guid>
 {
-    public int ListId { get; init; }
+    public Guid ListId { get; init; }
 
     public string? Title { get; init; }
 }

@@ -1,18 +1,17 @@
-﻿using Expenzio.Application.TodoItems.Commands.CreateTodoItem;
-using Expenzio.Application.TodoItems.Commands.UpdateTodoItem;
-using Expenzio.Application.TodoLists.Commands.CreateTodoList;
+﻿using Expenzio.Application.Expenses.Commands.CreateExpense;
+using Expenzio.Application.Expenses.Commands.UpdateExpense;
 using Expenzio.Domain.Entities;
 
-namespace Expenzio.Application.FunctionalTests.TodoItems.Commands;
+namespace Expenzio.Application.FunctionalTests.Expenses.Commands;
 
 using static Testing;
 
-public class UpdateTodoItemTests : BaseTestFixture
+public class UpdateExpenseTests : BaseTestFixture
 {
     [Test]
     public async Task ShouldRequireValidTodoItemId()
     {
-        var command = new UpdateTodoItemCommand { Id = 99, Title = "New Title" };
+        var command = new UpdateExpenseCommand { Id = Guid.NewGuid(), Title = "New Title" };
         await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotFoundException>();
     }
 
@@ -21,18 +20,18 @@ public class UpdateTodoItemTests : BaseTestFixture
     {
         var userId = await RunAsDefaultUserAsync();
 
-        var listId = await SendAsync(new CreateTodoListCommand
+        var listId = await SendAsync(new CreateExpenseCommand
         {
             Title = "New List"
         });
 
-        var itemId = await SendAsync(new CreateTodoItemCommand
+        var itemId = await SendAsync(new CreateExpenseCommand
         {
             ListId = listId,
             Title = "New Item"
         });
 
-        var command = new UpdateTodoItemCommand
+        var command = new UpdateExpenseCommand
         {
             Id = itemId,
             Title = "Updated Item Title"
@@ -40,10 +39,10 @@ public class UpdateTodoItemTests : BaseTestFixture
 
         await SendAsync(command);
 
-        var item = await FindAsync<TodoItem>(itemId);
+        var item = await FindAsync<Expense>(itemId);
 
         item.Should().NotBeNull();
-        item!.Title.Should().Be(command.Title);
+        item!.Description.Should().Be(command.Title);
         item.LastModifiedBy.Should().NotBeNull();
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
