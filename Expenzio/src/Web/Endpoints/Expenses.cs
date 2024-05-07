@@ -25,26 +25,26 @@ public class Expenses : EndpointGroupBase
         return sender.Send(query);
     }
 
-    public Task<int> CreateExpense(ISender sender, CreateExpenseCommand command)
+    public Task<Guid> CreateExpense(ISender sender, CreateExpenseCommand command)
     {
         return sender.Send(command);
     }
 
-    public async Task<IResult> UpdateExpense(ISender sender, int id, UpdateExpenseCommand command)
+    public async Task<IResult> UpdateExpense(ISender sender, Guid id, UpdateExpenseCommand command)
     {
         if (id != command.Id) return Results.BadRequest();
         await sender.Send(command);
         return Results.NoContent();
     }
 
-    public async Task<IResult> UpdateExpenseDetail(ISender sender, int id, UpdateExpenseDetailCommand command)
+    public async Task<IResult> UpdateExpenseDetail(ISender sender, Guid id, UpdateExpenseDetailCommand command)
     {
         if (id != command.Id) return Results.BadRequest();
         await sender.Send(command);
         return Results.NoContent();
     }
 
-    public async Task<IResult> DeleteExpense(ISender sender, int id)
+    public async Task<IResult> DeleteExpense(ISender sender, Guid id)
     {
         await sender.Send(new DeleteExpenseCommand(id));
         return Results.NoContent();

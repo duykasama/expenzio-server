@@ -11,9 +11,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<T> CreateSet<T>() where T : BaseEntity
+    public DbSet<TEntity> CreateSet<TEntity, TKey>() where TEntity : BaseEntity<TKey> where TKey : notnull
     {
-        return base.Set<T>();
+        return base.Set<TEntity>();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

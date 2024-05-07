@@ -4,25 +4,27 @@ using Expenzio.Domain.Events;
 
 namespace Expenzio.Application.Expenses.Commands.DeleteExpense;
 
-public record DeleteExpenseCommand(int Id) : IRequest;
+public record DeleteExpenseCommand(Guid Id) : IRequest;
 
 public class DeleteExpenseCommandHandler : IRequestHandler<DeleteExpenseCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly DbSet<Expense> _expenses;
 
     public DeleteExpenseCommandHandler(IApplicationDbContext context)
     {
         _context = context;
+        _expenses = _context.CreateSet<Expense, Guid>();
     }
 
     public async Task Handle(DeleteExpenseCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.CreateSet<Expense>()
+        var entity = await _expenses
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
         Guard.Against.NotFound(request.Id, entity);
 
-        _context.CreateSet<Expense>().Remove(entity);
+        _expenses.Remove(entity);
 
         entity.AddDomainEvent(new ExpenseDeletedEvent(entity));
 

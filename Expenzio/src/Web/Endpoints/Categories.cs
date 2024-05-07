@@ -22,19 +22,19 @@ public class ExpenseCategories : EndpointGroupBase
     //     return  sender.Send(new GetExpensesQuery());
     // }
 
-    public Task<int> CreateExpenseCategory(ISender sender, CreateExpenseCategoryCommand command)
+    public Task<Guid> CreateExpenseCategory(ISender sender, CreateExpenseCategoryCommand command)
     {
         return sender.Send(command);
     }
 
-    public async Task<IResult> UpdateExpenseCategory(ISender sender, int id, UpdateExpenseCategoryCommand command)
+    public async Task<IResult> UpdateExpenseCategory(ISender sender, Guid id, UpdateExpenseCategoryCommand command)
     {
         if (id != command.Id) return Results.BadRequest();
         await sender.Send(command);
         return Results.NoContent();
     }
 
-    public async Task<IResult> DeleteExpenseCategory(ISender sender, int id)
+    public async Task<IResult> DeleteExpenseCategory(ISender sender, Guid id)
     {
         await sender.Send(new DeleteExpenseCategoryCommand(id));
         return Results.NoContent();

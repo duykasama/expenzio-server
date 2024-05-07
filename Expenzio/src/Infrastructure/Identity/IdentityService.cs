@@ -2,7 +2,6 @@ using Expenzio.Application.Common.Interfaces;
 using Expenzio.Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Expenzio.Infrastructure.Identity;
 

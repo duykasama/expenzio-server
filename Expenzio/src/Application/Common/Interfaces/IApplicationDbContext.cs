@@ -4,7 +4,7 @@ namespace Expenzio.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
-    DbSet<T> CreateSet<T>() where T : BaseEntity;
+    DbSet<TEntity> CreateSet<TEntity, TKey>() where TEntity : BaseEntity<TKey> where TKey : notnull;
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

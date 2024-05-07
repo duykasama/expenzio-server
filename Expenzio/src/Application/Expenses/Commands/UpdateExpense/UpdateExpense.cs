@@ -5,7 +5,7 @@ namespace Expenzio.Application.Expenses.Commands.UpdateExpense;
 
 public record UpdateExpenseCommand : IRequest
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     public string? Title { get; init; }
 
@@ -15,15 +15,17 @@ public record UpdateExpenseCommand : IRequest
 public class UpdateExpenseCommandHandler : IRequestHandler<UpdateExpenseCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly DbSet<Expense> _expenses;
 
     public UpdateExpenseCommandHandler(IApplicationDbContext context)
     {
         _context = context;
+        _expenses = _context.CreateSet<Expense, Guid>();
     }
 
     public async Task Handle(UpdateExpenseCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.CreateSet<Expense>()
+        var entity = await _expenses
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
         Guard.Against.NotFound(request.Id, entity);

@@ -5,7 +5,7 @@ namespace Expenzio.Application.ExpenseCategories.Commands.UpdateExpenseCategory;
 
 public record UpdateExpenseCategoryCommand : IRequest
 {
-    public int Id { get; init; }
+    public Guid Id { get; init; }
 
     public string? Title { get; init; }
 
@@ -20,7 +20,7 @@ public class UpdateExpenseCategoryCommandHandler : IRequestHandler<UpdateExpense
     public UpdateExpenseCategoryCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _categories = _context.CreateSet<ExpenseCategory>();
+        _categories = _context.CreateSet<ExpenseCategory, Guid>();
     }
 
     public async Task Handle(UpdateExpenseCategoryCommand request, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
 ﻿namespace Expenzio.Domain.Common;
 
-public abstract class BaseAuditableEntity : BaseEntity
+public abstract class BaseAuditableEntity<T> : BaseEntity<T> where T : notnull
 {
     public DateTimeOffset Created { get; set; }
 
