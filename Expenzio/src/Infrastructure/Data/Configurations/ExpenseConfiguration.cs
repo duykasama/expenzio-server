@@ -14,6 +14,7 @@ public class TodoItemConfiguration : IEntityTypeConfiguration<Expense>
             .ValueGeneratedOnAdd();
         builder.Property(t => t.Amount)
             .HasColumnName("amount")
+            .HasColumnType("decimal(18,2)")
             .IsRequired();
         builder.Property(t => t.Description)
             .HasColumnName("description")
